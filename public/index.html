@@ -15,6 +15,17 @@
       user's mobile device or desktop. See https://developers.google.com/web/fundamentals/web-app-manifest/
     -->
     <link rel="manifest" href="%PUBLIC_URL%/manifest.json" />
+
+        <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="%PUBLIC_URL%/ug/bootstrap.css" >
+    <!-- <link rel="stylesheet" href="{{asset('survey/ug/bower_components/bootstrap/dist/css/bootstrap.min.css')}}"> -->
+    <link rel="stylesheet" href="%PUBLIC_URL%/ug/bower_components/font-awesome/css/font-awesome.min.css">
+    <link rel="stylesheet" href="%PUBLIC_URL%/ug/bower_components/Ionicons/css/ionicons.min.css">
+    <link rel="stylesheet" href="%PUBLIC_URL%/ug/dist/css/AdminLTE.min.css">
+    <link rel="stylesheet" href="%PUBLIC_URL%/ug/dist/css/skins/_all-skins.min.css">
+    
+    <link href="https://fonts.googleapis.com/css?family=Montserrat:300,300i,400,400i,500,500i%7COpen+Sans:300,300i,400,400i,600,600i,700,700i" rel="stylesheet">
+
     <!--
       Notice the use of %PUBLIC_URL% in the tags above.
       It will be replaced with the URL of the `public` folder during the build.
@@ -25,6 +36,39 @@
       Learn how to configure a non-root public URL by running `npm run build`.
     -->
     <title>React App</title>
+
+    <style type="text/css">
+            .ugbackcolor{
+                background: #000073!important
+            }
+            .box {
+                border-top: none;
+                border: 1px solid #d6d6d6;
+                background: rgba(255,255,255,0.6);
+            }
+            form .form-section {
+                color: #404E67;
+                line-height: 3rem;
+                margin-bottom: 20px;
+                border-bottom: 1px solid #404E67;
+            }
+            .box-header {
+                border-bottom: 1px solid #d6d6d6;
+                border-left: 1px solid #d6d6d6;
+                background: #f9f6f1;
+                background: -moz-linear-gradient(top, #f9f6f1 0%, #f2efea 100%);
+                background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#f9f6f1), color-stop(100%,#f2efea));
+                background: -webkit-linear-gradient(top, #f9f6f1 0%,#f2efea 100%);
+                background: -o-linear-gradient(top, #f9f6f1 0%,#f2efea 100%);
+                background: -ms-linear-gradient(top, #f9f6f1 0%,#f2efea 100%);
+                background: linear-gradient(top, #f9f6f1 0%,#f2efea 100%);
+                filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#f9f6f1', endColorstr='#f2efea');
+                -ms-filter: "progid:DXImageTransform.Microsoft.gradient(startColorstr='#f9f6f1', endColorstr='#f2efea')";
+            }
+            h1, h2, h3, h4, h5, h6, .h1, .h2, .h3, .h4, .h5, .h6 {
+                font-family: 'Montserrat','Source Sans Pro',sans-serif;
+            }
+        </style>
   </head>
   <body>
     <noscript>You need to enable JavaScript to run this app.</noscript>
