@@ -234,12 +234,12 @@ export default function ({setstep}) {
                     or as you are eating it?
                   </label>
                   <select
-                    defaultValue={"null"}
+                    defaultValue={""}
                     required
                     className="form-control"
                     onChange={handleSaltSauseChange}
                   >
-                    <option value="null">--Select an option--</option>
+                    <option value="">--Select an option--</option>
                     <option value="Always">Always</option>
                     <option value="Often">Often</option>
                     <option value="Sometimes">Sometimes </option>
@@ -258,12 +258,12 @@ export default function ({setstep}) {
                     household?
                   </label>
                   <select
-                    defaultValue={"null"}
+                    defaultValue={""}
                     required
                     onChange={handleSaltySauseInHomeChange}
                     className="form-control"
                   >
-                    <option value="null">--Select an option--</option>
+                    <option value="">--Select an option--</option>
                     <option value="Always">Always</option>
                     <option value="Often">Often</option>
                     <option value="Sometimes">Sometimes </option>
@@ -297,7 +297,7 @@ export default function ({setstep}) {
                   <select
                     onChange={handleProcessedFoodHighInSauseChange}
                     required
-                    defaultValue={"null"}
+                    defaultValue={""}
                     className="form-control"
                   >
                     <option value="">--Select an option--</option>
@@ -327,12 +327,12 @@ export default function ({setstep}) {
                     think you consume?
                   </label>
                   <select
-                    defaultValue={"null"}
+                    defaultValue={""}
                     required
                     onChange={handleSaltySauseConsumeChange}
                     className="form-control"
                   >
-                    <option value="null">--Select an option--</option>
+                    <option value="">--Select an option--</option>
                     <option value="Far too much">Far too much</option>
                     <option value="Too much">Too much</option>
                     <option value="Just the right amount">
@@ -353,11 +353,11 @@ export default function ({setstep}) {
                   </label>
                   <select
                     onChange={handleImprtanceLowerSaltChange}
-                    defaultValue={"null"}
+                    defaultValue={""}
                     required
                     className="form-control"
                   >
-                    <option value="null">--Select an option--</option>
+                    <option value="">--Select an option--</option>
                     <option value="Very important">Very important</option>
                     <option value="Somewhat important">
                       Somewhat important
@@ -387,11 +387,11 @@ export default function ({setstep}) {
                   </label>
                   <select
                     onChange={handleIdeaOnExcessSaltChange}
-                    defaultValue={"null"}
+                    defaultValue={""}
                     required
                     className="form-control"
                   >
-                    <option value="null">--Select an option--</option>
+                    <option value="">--Select an option--</option>
                     <option value="Yes">Yes</option>
                     <option value="No">No</option>
                     <option value="Don't know">Don't know</option>
@@ -423,11 +423,11 @@ export default function ({setstep}) {
                     <strong>(I)</strong> Limit consumption of processed foods
                   </label>
                   <select
-                    defaultValue={"null"}
+                    defaultValue={""}
                     onChange={() => handleLowerSaltActionChange(1)}
                     className="form-control"
                   >
-                    <option value="null">--Select an option--</option>
+                    <option value="">--Select an option--</option>
                     <option value="Yes">Yes</option>
                     <option value="No">No</option>
                   </select>
@@ -441,11 +441,11 @@ export default function ({setstep}) {
                     food labels
                   </label>
                   <select
-                    defaultValue={"null"}
+                    defaultValue={""}
                     onChange={() => handleLowerSaltActionChange(2)}
                     className="form-control"
                   >
-                    <option value="null">--Select an option--</option>
+                    <option value="">--Select an option--</option>
                     <option value="Yes">Yes</option>
                     <option value="No">No</option>
                   </select>
@@ -458,11 +458,11 @@ export default function ({setstep}) {
                     <strong>(III)</strong> Buy low salt/sodium alternatives
                   </label>
                   <select
-                    defaultValue={"null"}
+                    defaultValue={""}
                     onChange={() => handleLowerSaltActionChange(3)}
                     className="form-control"
                   >
-                    <option value="null">--Select an option--</option>
+                    <option value="">--Select an option--</option>
                     <option value="Yes">Yes</option>
                     <option value="No">No</option>
                   </select>
@@ -477,11 +477,11 @@ export default function ({setstep}) {
                   </label>
                   <select
                     onChange={() => handleLowerSaltActionChange(4)}
-                    defaultValue={"null"}
+                    defaultValue={""}
                     required
                     className="form-control"
                   >
-                    <option value="null">--Select an option--</option>
+                    <option value="">--Select an option--</option>
                     <option value="Yes">Yes</option>
                     <option value="No">No</option>
                   </select>
@@ -495,7 +495,7 @@ export default function ({setstep}) {
                     a home
                   </label>
                   <select
-                    defaultValue={"null"}
+                    defaultValue={""}
                     className="form-control"
                     onChange={() => handleLowerSaltActionChange(5)}
                   >
@@ -514,11 +514,11 @@ export default function ({setstep}) {
                     control your salt intake
                   </label>
                   <select
-                    defaultValue={"null"}
+                    defaultValue={""}
                     className="form-control"
                     onChange={() => handleLowerSaltActionChange(6)}
                   >
-                    <option value="null">--Select an option--</option>
+                    <option value="">--Select an option--</option>
                     <option value="Yes">Yes</option>
                     <option value="No">No</option>
                   </select>

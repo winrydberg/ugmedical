@@ -1,6 +1,9 @@
+import React from 'react';
 import logo from "./icon.png";
+import topbg from "./login2.jpg";
 import "./App.css";
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import axios from 'axios';
 import DemographicInfo from "./DemographicInfo";
 import Tobacco from "./Tobacco";
 import AlcoholConsumption from "./AlcoholConsumption";
@@ -12,9 +15,48 @@ import Diabetes from "./Diabetes";
 import Cholesterol from "./Cholesterol";
 import CardioVascular from "./CardioVascular";
 import GenderScreening from "./GenderScreening";
+import FinalStage from './FinalStage';
+
+export const SurveyContext = React.createContext();
 
 function App() {
+
+
   const [step, setStep] = useState(1);
+  const [student_info, setStudentInfo] = useState(null);
+  const [loading, setLoading] = useState(true);
+
+  //survey sections
+  const [demographic, setDemographic] = useState(null);
+  const [tobacco, setTobacco] = useState(null);
+  const [alcohol, setAlcohol] = useState(null);
+  const [alcoholexp, setAlcoholExp] = useState(null);
+  const [diets, setDiets] = useState(null);
+  const [physical_excercise, setPhysicalExcercise] = useState(null);
+  const [bloodpressure, setBloodPressure] = useState(null);
+  const [diabetes, setDiabetes] = useState(null);
+  const [cholestrol, setCholesterol] = useState(null);
+  const [cardiovascular, setCardioVascular] = useState(null);
+  const [gender_screen, setGenderScreen] = useState(null);
+
+
+  useEffect(() => {
+    getLoggedInStudentInfo();
+  }, [])
+
+  const getLoggedInStudentInfo = () => {
+      axios.get("https://sts.ug.edu.gh/services/medical/getstudentinfo").then(res => {
+        setLoading(false);
+        if(res.data.status === 'success'){
+          console.log(res.data)
+            setStudentInfo(res.data.data);
+        }else{
+          alert("Unable to get student info. Refresh to load details")
+        }
+      }).catch(error => {
+        setLoading(false);
+      });
+  }
 
   const stepCallbackHandler = (val) => {
     setStep(val);
@@ -402,6 +444,33 @@ function App() {
               <p style={{ color: "white", marginTop: 15 }}>11</p>
             </div>
           </div>
+
+          <div
+            className="col-md-1"
+            onClick={() => jumpToTab(12)}
+            style={{
+              cursor: "pointer",
+              display: "flex",
+              flexDirection: "column",
+              alignItems: "center",
+              justifyContent: "center",
+            }}
+          >
+            <div
+              style={{
+                height: 50,
+                width: 50,
+                borderRadius: 25,
+                display: "flex",
+                flexDirection: "row",
+                alignItems: "center",
+                justifyContent: "center",
+                backgroundColor: step === 12 ? "#281564" : "#d6d6d6",
+              }}
+            >
+              <p style={{ color: "white", marginTop: 15 }}>12</p>
+            </div>
+          </div>
         </div>
 
         <hr />
@@ -412,67 +481,183 @@ function App() {
   const renderStep = () => {
     switch (step) {
       case 1:
-        return <DemographicInfo setstep={stepCallbackHandler} />;
+        return (
+          <DemographicInfo
+            setstep={stepCallbackHandler}
+            set_demographic={setDemographic}
+          />
+        );
       case 2:
-        return <Tobacco setstep={stepCallbackHandler} />;
+        return (
+          <Tobacco setstep={stepCallbackHandler} set_tobacco={setTobacco} />
+        );
       case 3:
-        return <AlcoholConsumption setstep={stepCallbackHandler} />;
+        return (
+          <AlcoholConsumption
+            setstep={stepCallbackHandler}
+            set_alcohol={setAlcohol}
+          />
+        );
       case 4:
-        return <AlcoholEnhanced setstep={stepCallbackHandler} />;
+        return (
+          <AlcoholEnhanced
+            setstep={stepCallbackHandler}
+            set_alcohol_exp={setAlcoholExp}
+          />
+        );
       case 5:
-        return <Diet setstep={stepCallbackHandler} />;
+        return <Diet setstep={stepCallbackHandler} set_diets={setDiets} />;
       case 6:
-        return <Physical setstep={stepCallbackHandler} />;
+        return (
+          <Physical
+            setstep={stepCallbackHandler}
+            set_physical_excercise={setPhysicalExcercise}
+          />
+        );
       case 7:
-        return <BloodPressure setstep={stepCallbackHandler} />;
+        return (
+          <BloodPressure
+            setstep={stepCallbackHandler}
+            set_bloodpressure={setBloodPressure}
+          />
+        );
       case 8:
-        return <Diabetes setstep={stepCallbackHandler} />;
+        return (
+          <Diabetes setstep={stepCallbackHandler} set_diabetes={setDiabetes} />
+        );
       case 9:
-        return <Cholesterol setstep={stepCallbackHandler} />;
+        return (
+          <Cholesterol
+            setstep={stepCallbackHandler}
+            set_cholesterol={setCholesterol}
+          />
+        );
       case 10:
-        return <CardioVascular setstep={stepCallbackHandler} />;
+        return (
+          <CardioVascular
+            setstep={stepCallbackHandler}
+            set_cardiovascular={setCardioVascular}
+          />
+        );
       case 11:
-        return <GenderScreening setstep={stepCallbackHandler} />;
+        return (
+          <GenderScreening
+            setstep={stepCallbackHandler}
+            set_gendescreen={setGenderScreen}
+          />
+        );
         break;
+      case 12:
+        return (
+          <FinalStage />
+        );
+        break
     }
   };
 
-  return (
-    <div className="">
-      <div className="row ">
-        <div className="col-md-12">
-          <div
-            className="row col-md-12"
-            style={{
-              display: "flex",
-              flexDirection: "column",
-              alignItems: "center",
-              padding: 10,
-            }}
-          >
-            <img src={logo} />
-            <h5>UNIVERSITY OF GHANA</h5>
-            <h2>FRESHMEN MEDICALS</h2>
+  const welcomeMessage = () => {
+    if(student_info != null){
+      return (
+        <h4 style={{ textAlign: "center" }}>
+          Hello {student_info.student_name}, Welcome to Freshmen's Health Survey
+        </h4>
+      );
+    }else{
+      <p>Unable to get Student Information</p>
+    }
+  }
+
+  const renderSurvey = () => {
+    if(loading){
+        return (
+          <div className="" style={{display:'flex', minHeight: '100vh', flexDirection:'column', alignItems:'center', justifyContent:'center'}} >
+            <i className="fa fa-spinner fa-spin fa-3x" style={{marginBottom: 20}}></i>
+            <p>Loading... Please wait...</p>
           </div>
-          <div className="box">
-            <div className="box-header with-border">
-              <h3 className="box-title"></h3>
-            </div>
-            <div className="container" style={{marginTop: 50, alignItems:'center'}}>
-              <h4 style={{textAlign:'center'}}>
-                Hello Edwin, Welcome to Freshmen's Health Survey
-              </h4>
-            </div>
+        );
+    }else{
+      return (
+        <div className="box" style={{ paddingBottom: 70 }}>
+          <div className="box-header with-border">
+            <h3 className="box-title"></h3>
+          </div>
+          <div
+            className="container"
+            style={{ marginTop: 50, alignItems: "center" }}
+          >
+            {welcomeMessage()}
+          </div>
 
-            <div className="box-body" style={{ padding: "2rem" }}>
-              {renderStepperheader()}
+          <div className="box-body" style={{ padding: "2rem" }}>
+            {renderStepperheader()}
 
-              {renderStep()}
+            {renderStep()}
+          </div>
+        </div>
+      );
+    }
+  }
+
+  return (
+    <SurveyContext.Provider value={{
+      demographic: demographic,
+      tobacco: tobacco,
+      alcohol: alcohol,
+      alcoholexp:alcoholexp,
+      diets: diets,
+      physical_excercise: physical_excercise,
+      bloodpressure: bloodpressure,
+      diabetes: diabetes,
+      cholestrol: cholestrol,
+      cardiovascular: cardiovascular,
+      gender_screen: gender_screen
+    }}>
+      <div className="" style={{ width: "100vw" }}>
+        <div className="row">
+          <div className="col-md-12">
+            <div
+              className="row col-md-12"
+              style={{
+                width: "100vw",
+                backgroundImage: "url(" + topbg + ")",
+                backgroundPosition: "top",
+                backgroundSize: "cover",
+                display: "flex",
+                flexDirection: "column",
+                alignItems: "center",
+                paddingBottom: 10,
+              }}
+            >
+              <img src={logo} />
+              <h5 style={{ color: "white" }}>UNIVERSITY OF GHANA</h5>
+              <h2 style={{ color: "white", fontWeight: "bold" }}>
+                FRESHMEN MEDICALS
+              </h2>
             </div>
+            {renderSurvey()}
+          </div>
+        </div>
+
+        <div
+          className="footer"
+          style={{
+            height: 40,
+            backgroundColor: "#281564",
+            flexDirection: "center",
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+          }}
+        >
+          <div className="container">
+            <span style={{ color: "white" }}>
+              UG -Medical Survey | All Rights Reserved @{" "}
+              {new Date().getFullYear()}
+            </span>
           </div>
         </div>
       </div>
-    </div>
+    </SurveyContext.Provider>
   );
 }
 

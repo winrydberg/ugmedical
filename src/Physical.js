@@ -46,11 +46,11 @@ export default function Physical({setstep}) {
 
     const handleNext = () => {
       console.log(work_involves_activity);
-      setstep(3);
+      setstep(7);
     };
 
     const handleBack = () => {
-      setstep(1);
+      setstep(5);
     };
 
 
@@ -103,11 +103,11 @@ export default function Physical({setstep}) {
                   </label>
                   <select
                     required
-                    defaultValue={"null"}
+                    defaultValue={""}
                     className="form-control"
                     onChange={handleWorkInvolvesActivityChange}
                   >
-                    <option value="null" disabled>
+                    <option value="" disabled>
                       --Select an option--
                     </option>
                     <option value="Yes">Yes</option>
@@ -173,10 +173,10 @@ export default function Physical({setstep}) {
                   <select
                     onChange={handleWorkModExcerciseChange}
                     required
-                    defaultValue={"null"}
+                    defaultValue={""}
                     className="form-control"
                   >
-                    <option value="null" disabled>
+                    <option value="" disabled>
                       --Select an option--
                     </option>
                     <option value="Yes">Yes</option>
@@ -264,11 +264,11 @@ export default function Physical({setstep}) {
                   </label>
                   <select
                     required
-                    defaultValue={"null"}
+                    defaultValue={""}
                     onChange={handlePedalCyclingChange}
                     className="form-control"
                   >
-                    <option value="null" disabled>
+                    <option value="" disabled>
                       --Select an option--
                     </option>
                     <option value="Yes">Yes</option>
@@ -355,12 +355,12 @@ export default function Physical({setstep}) {
                     [running or football] for at least 10 minutes continuously?
                   </label>
                   <select
-                    defaultValue={"null"}
+                    defaultValue={""}
                     required
                     onChange={handleVigSportsChange}
                     className="form-control"
                   >
-                    <option value="null" disabled>
+                    <option value="" disabled>
                       --Select an option--
                     </option>
                     <option value="Yes">Yes</option>
@@ -427,9 +427,9 @@ export default function Physical({setstep}) {
                   <select
                     onChange={handleVigSportsIncreaseBreadthChange}
                     className="form-control"
-                    defaultValue={"null"}
+                    defaultValue={""}
                   >
-                    <option value="null" disabled>
+                    <option value="" disabled>
                       --Select an option--
                     </option>
                     <option value="Yes">Yes</option>
@@ -473,7 +473,7 @@ export default function Physical({setstep}) {
                     activities on a typical day? (Hrs:mins)
                   </label>
                   <input
-                  required
+                    required
                     onChange={handleTimeSpentVigSportsChange}
                     type="text"
                     className="form-control"
@@ -514,6 +514,8 @@ export default function Physical({setstep}) {
         <div className="row">
           <div className="col-md-2">
             <button
+              type="button"
+              onClick={handleBack}
               className="btn btn-danger btn-block"
               style={{ cursor: "pointer", color: "white" }}
             >
@@ -522,6 +524,8 @@ export default function Physical({setstep}) {
           </div>
           <div className="col-md-3">
             <button
+            type='submit'
+            onClick={saveAndContinue}
               className="btn btn-warning btn-block"
               style={{ cursor: "pointer", color: "white" }}
             >
@@ -530,6 +534,7 @@ export default function Physical({setstep}) {
           </div>
           <div className="col-md-3">
             <button
+            type='submit'
               className="btn btn-info btn-block"
               style={{ cursor: "pointer", color: "white" }}
             >
