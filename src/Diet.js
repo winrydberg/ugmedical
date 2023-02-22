@@ -1,6 +1,6 @@
-import React, {useState} from 'react'
+import React, {useState, useEffect} from 'react'
 
-export default function ({setstep}) {
+export default function ({setstep, set_diets, setreachstep}) {
 
         const [eat_fruits, setEatsFruits] = useState("");
         const [fruit_servings, setFruitServings] = useState("");
@@ -35,9 +35,9 @@ export default function ({setstep}) {
         const handleSaltySauseConsumeChange = (e) => setSaltySauseConsumed(e.target.value);
         const handleImprtanceLowerSaltChange = (e) => setImportanceLoweringSalt(e.target.value);
         const handleIdeaOnExcessSaltChange = (e) => setIdeaOnExcessSalt(e.target.value);
-        const handleLowerSaltActionChange = (e) => setLoweringSaltAction(e.target.value);
+        // const handleLowerSaltActionChange = (e) => setLoweringSaltAction(e.target.value);
 
-        const handleSaltLoweringActions = (val) => (e) => {
+        const handleSaltLoweringActions = (e, val) => {
             switch (val) {
               case 1:
                 setLoweringSaltAction((prevState) => ({
@@ -84,8 +84,26 @@ export default function ({setstep}) {
         };
 
 
+        useEffect(() => {
+            setreachstep(5);
+        }, []);
 
-      const handleNext = () => {
+
+      const handleNext = (e) => {
+        e.preventDefault();
+        set_diets({
+          eat_fruits,
+          fruit_servings,
+          eat_veges,
+          vegies_servings,
+          salty_sause,
+          salty_sause_inhouse,
+          processed_foods_high_in_salt,
+          salty_sause_consume,
+          lower_salt_importance,
+          idea_on_excess_salt,
+          lowering_salt_actions,
+        });
         setstep(6);
       };
 
@@ -424,7 +442,7 @@ export default function ({setstep}) {
                   </label>
                   <select
                     defaultValue={""}
-                    onChange={() => handleLowerSaltActionChange(1)}
+                    onChange={(e) => handleSaltLoweringActions(e,1)}
                     className="form-control"
                   >
                     <option value="">--Select an option--</option>
@@ -442,7 +460,7 @@ export default function ({setstep}) {
                   </label>
                   <select
                     defaultValue={""}
-                    onChange={() => handleLowerSaltActionChange(2)}
+                    onChange={(e) => handleSaltLoweringActions(e,2)}
                     className="form-control"
                   >
                     <option value="">--Select an option--</option>
@@ -459,7 +477,7 @@ export default function ({setstep}) {
                   </label>
                   <select
                     defaultValue={""}
-                    onChange={() => handleLowerSaltActionChange(3)}
+                    onChange={(e) => handleSaltLoweringActions(e,3)}
                     className="form-control"
                   >
                     <option value="">--Select an option--</option>
@@ -476,7 +494,7 @@ export default function ({setstep}) {
                     cooking
                   </label>
                   <select
-                    onChange={() => handleLowerSaltActionChange(4)}
+                    onChange={(e) => handleSaltLoweringActions(e,4)}
                     defaultValue={""}
                     required
                     className="form-control"
@@ -497,7 +515,7 @@ export default function ({setstep}) {
                   <select
                     defaultValue={""}
                     className="form-control"
-                    onChange={() => handleLowerSaltActionChange(5)}
+                    onChange={(e) => handleSaltLoweringActions(e,5)}
                   >
                     <option value="">--Select an option--</option>
                     <option value="Yes">Yes</option>
@@ -516,7 +534,7 @@ export default function ({setstep}) {
                   <select
                     defaultValue={""}
                     className="form-control"
-                    onChange={() => handleLowerSaltActionChange(6)}
+                    onChange={(e) => handleSaltLoweringActions(e,6)}
                   >
                     <option value="">--Select an option--</option>
                     <option value="Yes">Yes</option>
@@ -532,7 +550,7 @@ export default function ({setstep}) {
                   </label>
                   <input
                     className="form-control"
-                    onChange={() => handleLowerSaltActionChange(7)}
+                    onChange={(e) => handleSaltLoweringActions(e,7)}
                   />
                   {/* <span style="color:red;font-style:italic"></span> */}
                 </div>

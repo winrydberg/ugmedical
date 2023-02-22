@@ -1,78 +1,129 @@
-import React, {useState} from 'react'
+import React, {useState,useEffect} from 'react'
 
-export default function Tobacco({ setstep }) {
+export default function Tobacco({ setstep, set_tobacco, setreachstep }) {
+  const [tb_status, setTobaccoUseStatus] = useState("");
+  const [tb_daily_use, setTobaccoDailyUse] = useState("");
+  const [age_tb_use, setAgetbuse] = useState("");
+  const [useduration, setUseDuration] = useState("");
+  const [useduration_val, setUseDurationVal] = useState("");
+  const [try_stop, setTryStop] = useState("");
+  const [advice_by_doc, setAdviceByDoc] = useState("");
+  const [past_use, setPastUse] = useState("");
+  const [past_use_daily, setPastUseDaily] = useState("");
 
-const [tb_status, setTobaccoUseStatus] = useState("");
-const [tb_daily_use, setTobaccoDailyUse] = useState("");
-const [age_tb_use, setAgetbuse] = useState("");
-const [useduration, setUseDuration] = useState("");
-const [useduration_val, setUseDurationVal] = useState("");
-const [try_stop, setTryStop] = useState("");
-const [advice_by_doc, setAdviceByDoc] = useState("");
-const [past_use, setPastUse] = useState("");
-const [past_use_daily, setPastUseDaily] = useState("");
+  const [age_of_stop, setAgeOfStop] = useState("");
+  const [duration_of_stop, setDurationSinceStop] = useState("");
 
-const [age_of_stop, setAgeOfStop] = useState("");
-const [duration_of_stop, setDurationSinceStop] = useState("");
+  const [currently_using, setCurrentlyusing] = useState("");
+  const [currently_using_smokeless, setCurrentlyusingSmokeless] = useState("");
+  const [snuff_by_mouth, setSnuffByMouth] = useState({
+    status: "",
+    freq: "",
+    no_times: "",
+  });
 
-const [currently_using, setCurrentlyusing] = useState("");
-const [currently_using_smokeless, setCurrentlyusingSmokeless] = useState("");
-const [snuff_by_mouth, setSnuffByMouth] = useState({
-    status: '',
-    freq: '',
-    no_times: ''
-});
+  const [snuff_by_node, setSnuffByNose] = useState({
+    status: "",
+    freq: "",
+    no_times: "",
+  });
 
-const [snuff_by_node, setSnuffByNose] = useState({
-  status: "",
-  freq: "",
-  no_times: "",
-});
+  const [snuff_by_chewing, setSnuffByChewing] = useState({
+    status: "",
+    freq: "",
+    no_times: "",
+  });
 
-const [snuff_by_chewing, setSnuffByChewing] = useState({
-  status: "",
-  freq: "",
-  no_times: "",
-});
+  const [snuff_by_betel_quid, setSnuffByBetelQuid] = useState({
+    status: "",
+    freq: "",
+    no_times: "",
+  });
 
-const [snuff_by_betel_quid, setSnuffByBetelQuid] = useState({
-  status: "",
-  freq: "",
-  no_times: "",
-});
+  const [past_use_status, setPastuseStatus] = useState("");
+  const [past_use_status_daily, setPastuseStatusDaily] = useState("");
+  const [smoke_in_home, setSmokeInHome] = useState("");
+  const [smoke_in_work, setSmokeInWork] = useState("");
 
-const [past_use_status, setPastuseStatus] = useState("");
-const [past_use_status_daily, setPastuseStatusDaily] = useState("");
-const [smoke_in_home, setSmokeInHome] = useState("");
-const [smoke_in_work, setSmokeInWork] = useState("");
+  useEffect(() => {
+    setreachstep(2);
+  }, []);
 
-
-  const handleNext = () => {
-    console.log(tb_status);
+  const handleNext = (e) => {
+    e.preventDefault();
+    set_tobacco({
+      tb_status,
+      tb_daily_use,
+      age_tb_use,
+      useduration,
+      useduration_val,
+      try_stop,
+      advice_by_doc,
+      advice_by_doc,
+      past_use,
+      past_use_daily,
+      age_of_stop,
+      duration_of_stop,
+      currently_using,
+      currently_using_smokeless,
+      snuff_by_mouth,
+      snuff_by_node,
+      snuff_by_chewing,
+      snuff_by_betel_quid,
+      past_use_status,
+      past_use_status_daily,
+      smoke_in_home,
+      smoke_in_work,
+    });
     setstep(3);
   };
 
   const handleBack = () => {
     setstep(1);
   };
-  const saveAndContinue = () => {};
-
+  const saveAndContinue = () => {
+    console.log({
+      tb_status,
+      tb_daily_use,
+      age_tb_use,
+      useduration,
+      useduration_val,
+      try_stop,
+      advice_by_doc,
+      advice_by_doc,
+      past_use,
+      past_use_daily,
+      age_of_stop,
+      duration_of_stop,
+      currently_using,
+      currently_using_smokeless,
+      snuff_by_mouth,
+      snuff_by_node,
+      snuff_by_chewing,
+      snuff_by_betel_quid,
+      past_use_status,
+      past_use_status_daily,
+      smoke_in_home,
+      smoke_in_work,
+    });
+  };
 
   const handleTobaccoChange = (e) => setTobaccoUseStatus(e.target.value);
   const handleTbDailyUseChange = (e) => setTobaccoDailyUse(e.target.value);
   const handleAgeOfUseChange = (e) => setAgetbuse(e.target.value);
-  const handleUseDuration = (e) => setUseDuration(e.target.value);;
+  const handleUseDuration = (e) => setUseDuration(e.target.value);
   const handleUseDurationValue = (e) => setUseDurationVal(e.target.value);
-  const handleTryStop = (e) => setTryStop(e.target.value);;
-  const handleAdviceByDoc = (e) => setAdviceByDoc(e.target.value);;
+  const handleTryStop = (e) => setTryStop(e.target.value);
+  const handleAdviceByDoc = (e) => setAdviceByDoc(e.target.value);
   const handlePastUse = (e) => setPastUse(e.target.value);
   const handlePastUseDaily = (e) => setPastUseDaily(e.target.value);
   const handleAgeOfStop = (e) => setAgeOfStop(e.target.value);
   const handleDurationOfStop = (e) => setDurationSinceStop(e.target.value);
   const handleCurrentUsing = (e) => setCurrentlyusing(e.target.value);
-  const handleUurrentUsingSmokeless = (e) => setCurrentlyusingSmokeless(e.target.value);
+  const handleUurrentUsingSmokeless = (e) =>
+    setCurrentlyusingSmokeless(e.target.value);
 
-  const handleSnuffbyMouth = (val) => (e) => {
+  const handleSnuffbyMouth = (e, val) => {
     switch (val) {
       case 1:
         setSnuffByMouth((prevState) => ({
@@ -95,8 +146,7 @@ const [smoke_in_work, setSmokeInWork] = useState("");
     }
   };
 
-  
-  const handleSnuffbyNose = (val) => (e) => {
+  const handleSnuffbyNose = (e, val) => {
     switch (val) {
       case 1:
         setSnuffByNose((prevState) => ({
@@ -119,58 +169,56 @@ const [smoke_in_work, setSmokeInWork] = useState("");
     }
   };
 
+  const handleSnuffbyChewing = (e, val) => {
+    switch (val) {
+      case 1:
+        setSnuffByChewing((prevState) => ({
+          ...prevState,
+          status: e.target.value,
+        }));
 
-    const handleSnuffbyChewing = (val) => (e) => {
-      switch (val) {
-        case 1:
-          setSnuffByChewing((prevState) => ({
-            ...prevState,
-            status: e.target.value,
-          }));
+        break;
+      case 2:
+        setSnuffByChewing((prevState) => ({
+          ...prevState,
+          freq: e.target.value,
+        }));
+        break;
+      case 3:
+        setSnuffByChewing((prevState) => ({
+          ...prevState,
+          no_times: e.target.value,
+        }));
+    }
+  };
 
-          break;
-        case 2:
-          setSnuffByChewing((prevState) => ({
-            ...prevState,
-            freq: e.target.value,
-          }));
-          break;
-        case 3:
-          setSnuffByChewing((prevState) => ({
-            ...prevState,
-            no_times: e.target.value,
-          }));
-      }
-    };
+  const handleSnuffbyBetelQuid = (e, val) => {
+    switch (val) {
+      case 1:
+        setSnuffByBetelQuid((prevState) => ({
+          ...prevState,
+          status: e.target.value,
+        }));
 
-    const handleSnuffbyBetelQuid = (val) => (e) => {
-      switch (val) {
-        case 1:
-          setSnuffByBetelQuid((prevState) => ({
-            ...prevState,
-            status: e.target.value,
-          }));
-
-          break;
-        case 2:
-          setSnuffByBetelQuid((prevState) => ({
-            ...prevState,
-            freq: e.target.value,
-          }));
-          break;
-        case 3:
-          setSnuffByBetelQuid((prevState) => ({
-            ...prevState,
-            no_times: e.target.value,
-          }));
-      }
-    };
+        break;
+      case 2:
+        setSnuffByBetelQuid((prevState) => ({
+          ...prevState,
+          freq: e.target.value,
+        }));
+        break;
+      case 3:
+        setSnuffByBetelQuid((prevState) => ({
+          ...prevState,
+          no_times: e.target.value,
+        }));
+    }
+  };
 
   const handlePastUseStatus = (e) => setPastuseStatus(e.target.value);
   const handlePastUseStatusDaily = (e) => setPastuseStatusDaily(e.target.value);
   const handleSmokeInHome = (e) => setSmokeInHome(e.target.value);
   const handleSmokeInWork = (e) => setSmokeInWork(e.target.value);
-
 
   return (
     <div>
@@ -195,6 +243,8 @@ const [smoke_in_work, setSmokeInWork] = useState("");
                     onChange={handleTobaccoChange}
                     name="tobacco"
                     id="tobacco"
+                    required
+                    defaultValue={""}
                     className="form-control"
                   >
                     <option value="" disabled selected="selected">
@@ -516,7 +566,7 @@ const [smoke_in_work, setSmokeInWork] = useState("");
                   </label>
                   <select
                     className="form-control"
-                    onChange={() => handleSnuffbyMouth(1)}
+                    onChange={(e) => handleSnuffbyMouth(e,1)}
                   >
                     <option value="" disabled selected="selected">
                       -- Select an option --
@@ -535,7 +585,7 @@ const [smoke_in_work, setSmokeInWork] = useState("");
                   </label>
                   <select
                     className="form-control"
-                    onChange={() => handleSnuffbyMouth(2)}
+                    onChange={(e) => handleSnuffbyMouth(e,2)}
                   >
                     <option value="" disabled selected="selected">
                       -- Select an option --
@@ -553,7 +603,7 @@ const [smoke_in_work, setSmokeInWork] = useState("");
                     <strong>(III)</strong>No. Of Times
                   </label>
                   <input
-                    onChange={() => handleSnuffbyMouth(3)}
+                    onChange={(e) => handleSnuffbyMouth(e,3)}
                     type="number"
                     className="form-control"
                     id="yearsinsch"
@@ -577,7 +627,7 @@ const [smoke_in_work, setSmokeInWork] = useState("");
                   </label>
                   <select
                     className="form-control"
-                    onChange={() => handleSnuffbyNose(1)}
+                    onChange={(e) => handleSnuffbyNose(e,1)}
                   >
                     <option value="" disabled selected="selected">
                       -- Select an option --
@@ -596,7 +646,7 @@ const [smoke_in_work, setSmokeInWork] = useState("");
                   </label>
                   <select
                     className="form-control"
-                    onChange={() => handleSnuffbyNose(2)}
+                    onChange={(e) => handleSnuffbyNose(e,2)}
                   >
                     <option value="" disabled selected="selected">
                       -- Select an option --
@@ -611,7 +661,7 @@ const [smoke_in_work, setSmokeInWork] = useState("");
                 <div className="form-group">
                   <label htmlFor="yearsinsch">No. Of Times</label>
                   <input
-                    onChange={() => handleSnuffbyNose(3)}
+                    onChange={(e) => handleSnuffbyNose(e,3)}
                     type="number"
                     className="form-control"
                     id="yearsinsch"
@@ -632,7 +682,7 @@ const [smoke_in_work, setSmokeInWork] = useState("");
                   <label htmlFor="yearsinsch">Chewing tobacco</label>
                   <select
                     className="form-control"
-                    onChange={() => handleSnuffbyChewing(1)}
+                    onChange={(e) => handleSnuffbyChewing(e,1)}
                   >
                     <option value="" disabled selected="selected">
                       -- Select an option --
@@ -648,7 +698,7 @@ const [smoke_in_work, setSmokeInWork] = useState("");
                   <label htmlFor="yearsinsch">Frequency</label>
                   <select
                     className="form-control"
-                    onChange={() => handleSnuffbyChewing(2)}
+                    onChange={(e) => handleSnuffbyChewing(e,2)}
                   >
                     <option value="" disabled selected="selected">
                       -- Select an option --
@@ -663,7 +713,7 @@ const [smoke_in_work, setSmokeInWork] = useState("");
                 <div className="form-group">
                   <label htmlFor="yearsinsch">No. Of Times</label>
                   <input
-                    onChange={() => handleSnuffbyChewing(3)}
+                    onChange={(e) => handleSnuffbyChewing(e,3)}
                     type="number"
                     className="form-control"
                     id="yearsinsch"

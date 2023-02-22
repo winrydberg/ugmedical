@@ -1,62 +1,89 @@
-import React, {useState} from 'react'
+import React, {useState, useEffect} from 'react'
 
-export default function Physical({setstep}) {
+export default function Physical({ setstep, set_physical_excercise, setreachstep }) {
+  const [work_involves_activity, setWorkActivity] = useState("");
+  const [days_of_vigorous_ex, setDaysOfVigorousExcercise] = useState("");
+  const [mod_excerise_in_week, setModerateExerciseInWeek] = useState("");
+  const [work_inv_moderate_excercise, setWorkModerateExcercise] = useState("");
+  const [work_mod_intencity_excercise, setWorkmodItencityExcerise] =
+    useState("");
+  const [time_spent_excerise, setTimeSpentExercising] = useState("");
+  const [pedal_cycling, setPedalCycling] = useState("");
+  const [days_spent_pedal_cycling, setDaysSpentPedalCycling] = useState("");
+  const [time_spent_cycling, setTimeSpentMedalCycling] = useState("");
 
-    const [work_involves_activity, setWorkActivity] = useState("");
-    const [days_of_vigorous_ex, setDaysOfVigorousExcercise] = useState("");
-    const [mod_excerise_in_week, setModerateExerciseInWeek] = useState("");
-    const [work_inv_moderate_excercise, setWorkModerateExcercise] = useState("");
-    const [work_mod_intencity_excercise, setWorkmodItencityExcerise] = useState("");
-    const [time_spent_excerise, setTimeSpentExercising] = useState("");
-    const [pedal_cycling, setPedalCycling] = useState("");
-    const [days_spent_pedal_cycling, setDaysSpentPedalCycling] = useState("");
-    const [time_spent_cycling, setTimeSpentMedalCycling] = useState("");
+  const [vig_sports, setVigSports] = useState("");
+  const [weekly_vig_sports, setWeeklyVigSports] = useState("");
+  const [timespent_vig_sports, setTimeSpentInVigSports] = useState("");
+  const [vig_sports_increasing_bresdth, setVigSportsIncreaseBreadth] =
+    useState("");
+  const [days_spent_invig_sports, setDaysSpentVigSports] = useState("");
+  const [time_spent_vigsport_daily, setTimeSpentVigSportsDaily] = useState("");
+  const [time_spent_sitting, setTimeSpentSitting] = useState("");
 
-    const [vig_sports, setVigSports] = useState("");
-    const [weekly_vig_sports, setWeeklyVigSports] = useState("");
-    const [timespent_vig_sports, setTimeSpentInVigSports] = useState("");
-    const [vig_sports_increasing_bresdth, setVigSportsIncreaseBreadth] = useState("");
-    const [days_spent_invig_sports, setDaysSpentVigSports] = useState("");
-    const [time_spent_vigsport_daily, setTimeSpentVigSportsDaily] = useState("");
+  const handleWorkInvolvesActivityChange = (e) =>
+    setWorkActivity(e.target.value);
+  const handleDaysVigExcerciseChange = (e) =>
+    setDaysOfVigorousExcercise(e.target.value);
+  const handleModExcerciseInWeekChange = (e) =>
+    setModerateExerciseInWeek(e.target.value);
+  const handleWorkModExcerciseChange = (e) =>
+    setWorkModerateExcercise(e.target.value);
+  const handleWorkModIntencityExcerciseChange = (e) =>
+    setWorkmodItencityExcerise(e.target.value);
+  const handleTimeSpentExcercisingChange = (e) =>
+    setTimeSpentExercising(e.target.value);
+  const handlePedalCyclingChange = (e) => setPedalCycling(e.target.value);
+  const handleDaysSpentPedalCyclingChange = (e) =>
+    setDaysSpentPedalCycling(e.target.value);
+  const handleTimeSpentPedalCyclingChange = (e) =>
+    setTimeSpentMedalCycling(e.target.value);
+  const handleVigSportsChange = (e) => setVigSports(e.target.value);
+  const handleWeeklyVigSportsChange = (e) => setWeeklyVigSports(e.target.value);
+  const handleTimeSpentInVigSportsChange = (e) =>
+    setTimeSpentInVigSports(e.target.value);
+  const handleVigSportsIncreaseBreadthChange = (e) =>
+    setVigSportsIncreaseBreadth(e.target.value);
+  const handleDaysSpentVigSportsChange = (e) =>
+    setDaysSpentVigSports(e.target.value);
+  const handleTimeSpentVigSportsChange = (e) =>
+    setTimeSpentVigSportsDaily(e.target.value);
 
+  const handleTimeSpentSittingChange = (e) =>
+  setTimeSpentSitting(e.target.value);
 
+  const handleNext = (e) => {
+    e.preventDefault();
+    set_physical_excercise({
+      work_involves_activity,
+      days_of_vigorous_ex,
+      mod_excerise_in_week,
+      work_inv_moderate_excercise,
+      work_mod_intencity_excercise,
+      time_spent_excerise,
+      pedal_cycling,
+      days_spent_pedal_cycling,
+      time_spent_cycling,
+      vig_sports,
+      weekly_vig_sports,
+      timespent_vig_sports,
+      vig_sports_increasing_bresdth,
+      days_spent_invig_sports,
+      time_spent_vigsport_daily,
+      time_spent_sitting
+    });
+    setstep(7);
+  };
 
-    const handleWorkInvolvesActivityChange = (e) => setWorkActivity(e.target.value);
-    const handleDaysVigExcerciseChange = (e) => setDaysOfVigorousExcercise(e.target.value);
-    const handleModExcerciseInWeekChange = (e) => setModerateExerciseInWeek(e.target.value);
-    const handleWorkModExcerciseChange = (e) => setWorkModerateExcercise(e.target.value);
-    const handleWorkModIntencityExcerciseChange = (e) => setWorkmodItencityExcerise(e.target.value);
-    const handleTimeSpentExcercisingChange = (e) => setTimeSpentExercising(e.target.value);
-    const handlePedalCyclingChange = (e) => setPedalCycling(e.target.value);
-    const handleDaysSpentPedalCyclingChange = (e) => setDaysSpentPedalCycling(e.target.value);
-    const handleTimeSpentPedalCyclingChange = (e) => setTimeSpentMedalCycling(e.target.value);
-    const handleVigSportsChange = (e) => setVigSports(e.target.value);
-    const handleWeeklyVigSportsChange = (e) => setWeeklyVigSports(e.target.value);
-    const handleTimeSpentInVigSportsChange = (e) => setTimeSpentInVigSports(e.target.value);
-    const handleVigSportsIncreaseBreadthChange = (e) => setVigSportsIncreaseBreadth(e.target.value);
-    const handleDaysSpentVigSportsChange = (e) => setDaysSpentVigSports(e.target.value);
-    const handleTimeSpentVigSportsChange = (e) => setTimeSpentVigSportsDaily(e.target.value);
+  useEffect(() => {
+    setreachstep(6);
+  }, []);
 
-    
+  const handleBack = () => {
+    setstep(5);
+  };
 
-
-
-
-
-
-    const handleNext = () => {
-      console.log(work_involves_activity);
-      setstep(7);
-    };
-
-    const handleBack = () => {
-      setstep(5);
-    };
-
-
-    const saveAndContinue = () => {};
-
-
+  const saveAndContinue = () => {};
 
   return (
     <div>
@@ -401,7 +428,7 @@ export default function Physical({setstep}) {
                   <label htmlFor="avg_earning">
                     <strong>12.</strong>How much time do you spend doing
                     vigorous-intensity sports, fitness or recreational
-                    activities on a typical day?
+                    activities on a typical day? (Hrs:mins)
                   </label>
                   <input
                     required
@@ -457,7 +484,7 @@ export default function Physical({setstep}) {
                   <input
                     required
                     onChange={handleDaysSpentVigSportsChange}
-                    type="time"
+                    type="text"
                     className="form-control"
                     id="avg_earning"
                     name="hse_count"
@@ -487,17 +514,17 @@ export default function Physical({setstep}) {
           </div>
         </div>
 
-        {/* <div className="row">
+        <div className="row">
         <div className="col-md-12">
           <div className="row">
             <div className="col-md-6">
               <div className="form-group">
                 <label htmlFor="avg_earning">
-                  <strong>16.</strong> How much time do you spend doing
-                  moderate-intensity sports, fitness or recreational (leisure)
-                  activities on a typical day? (Hrs:mins)
+                  <strong>16.</strong> How much time do you usually spend sitting or reclining on a typical day? (Hrs:mins)
                 </label>
                 <input
+                  required
+                  onChange={handleTimeSpentSittingChange}
                   type="text"
                   className="form-control"
                   id="avg_earning"
@@ -507,7 +534,7 @@ export default function Physical({setstep}) {
             </div>
           </div>
         </div>
-      </div> */}
+      </div>
 
         <br />
 
@@ -524,8 +551,8 @@ export default function Physical({setstep}) {
           </div>
           <div className="col-md-3">
             <button
-            type='submit'
-            onClick={saveAndContinue}
+              type="submit"
+              onClick={saveAndContinue}
               className="btn btn-warning btn-block"
               style={{ cursor: "pointer", color: "white" }}
             >
@@ -534,7 +561,7 @@ export default function Physical({setstep}) {
           </div>
           <div className="col-md-3">
             <button
-            type='submit'
+              type="submit"
               className="btn btn-info btn-block"
               style={{ cursor: "pointer", color: "white" }}
             >

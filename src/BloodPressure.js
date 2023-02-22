@@ -1,38 +1,47 @@
-import React, {useState} from 'react'
+import React, {useState, useEffect} from 'react'
 
-export default function BloodPressure({setstep}) {
+export default function BloodPressure({ setstep, set_bloodpressure, setreachstep }) {
+  const [measure_blood_pressure, setMeasureBloodPressure] = useState("");
+  const [raised_bllod_pressure, setRaisedBloodPressure] = useState("");
+  const [bp_raised_in_past_year, setBpRaisedinLastyear] = useState("");
+  const [taken_bp_drug_in_past_weeks, setTakenBPInPastWeeks] = useState("");
+  const [contacted_nativedoc_on_bp, setContactNativeDocOnBP] = useState("");
+  const [currently_taking_herbal_med_bp, setCurrTakingHerbalBPMed] =
+    useState("");
 
-    const [measure_blood_pressure, setMeasureBloodPressure] = useState("");
-    const [raised_bllod_pressure, setRaisedBloodPressure] = useState("");
-    const [bp_raised_in_past_year, setBpRaisedinLastyear] = useState("");
-    const [taken_bp_drug_in_past_weeks, setTakenBPInPastWeeks] = useState("");
-    const [contacted_nativedoc_on_bp, setContactNativeDocOnBP] = useState("");
-    const [currently_taking_herbal_med_bp, setCurrTakingHerbalBPMed] = useState("");
+  const handleBPMeasuredChange = (e) => setMeasureBloodPressure(e.target.value);
+  const handleBPRasiedChange = (e) => setRaisedBloodPressure(e.target.value);
+  const handleBPRaiedPastYearChange = (e) =>
+    setBpRaisedinLastyear(e.target.value);
+  const handleBPDrugsInPastWeekChange = (e) =>
+    setTakenBPInPastWeeks(e.target.value);
+  const handleContactNativeDocChange = (e) =>
+    setContactNativeDocOnBP(e.target.value);
+  const handleCurrTakingHerbBPMedChange = (e) =>
+    setCurrTakingHerbalBPMed(e.target.value);
 
+  useEffect(() => {
+    setreachstep(7);
+  }, []);
 
-
-    const handleBPMeasuredChange = (e) => setMeasureBloodPressure(e.target.value);
-    const handleBPRasiedChange = (e) => setRaisedBloodPressure(e.target.value);
-    const handleBPRaiedPastYearChange = (e) => setBpRaisedinLastyear(e.target.value);
-    const handleBPDrugsInPastWeekChange = (e) => setTakenBPInPastWeeks(e.target.value);
-    const handleContactNativeDocChange = (e) => setContactNativeDocOnBP(e.target.value);
-    const handleCurrTakingHerbBPMedChange = (e) => setCurrTakingHerbalBPMed(e.target.value);
-
-
-
-        
-
-    const handleNext = () => {
+  const handleNext = (e) => {
+    e.preventDefault();
+    set_bloodpressure({
+      measure_blood_pressure,
+      raised_bllod_pressure,
+      bp_raised_in_past_year,
+      taken_bp_drug_in_past_weeks,
+      contacted_nativedoc_on_bp,
+      currently_taking_herbal_med_bp,
+    });
     setstep(8);
-    };
+  };
 
-    const handleBack = () => {
+  const handleBack = () => {
     setstep(6);
-    };
+  };
 
-    const saveAndContinue = () => {
-
-    }
+  const saveAndContinue = () => {};
 
   return (
     <div>
@@ -58,7 +67,7 @@ export default function BloodPressure({setstep}) {
                     measured by a doctor or other health worker?
                   </label>
                   <select
-                    // defaultValue={""}
+                    defaultValue={""}
                     required
                     onChange={handleBPMeasuredChange}
                     className="form-control"
@@ -219,7 +228,7 @@ export default function BloodPressure({setstep}) {
           </div>
           <div className="col-md-3">
             <button
-            onClick={saveAndContinue}
+              onClick={saveAndContinue}
               type="button"
               className="btn btn-warning btn-block"
               style={{ cursor: "pointer", color: "white" }}

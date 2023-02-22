@@ -1,7 +1,16 @@
-import React, {useState} from 'react'
+import React, {useEffect, useState} from 'react'
+import { SurveyContext } from './App';
+import LoadingModal from './LoadingModal';
 
-export default function DemographicInfo({ setstep }) {
-
+export default function DemographicInfo({
+  setstep,
+  set_demographic,
+  setreachstep ,
+}) {
+  const value = React.useContext(SurveyContext);
+  const demographic = value.demographic;
+  const [loading, setLoading] = useState(false);
+  const [loadingText, setLoadingText] = useState("Loading... Please wait...");
   const [sex, setSex] = useState("");
   const [dob, setDob] = useState("");
   const [yrsinsch, setYrsSch] = useState("");
@@ -14,14 +23,50 @@ export default function DemographicInfo({ setstep }) {
   const [avg_earning, setEarning] = useState("");
   const [house_hold_income, setHouseHolincome] = useState("");
 
-  const handleNext = () => {
-    console.log(sex, dob, house_hold_income, avg_earning, avg_earning_rate);
+
+  useEffect(() => {
+    setreachstep(1)
+  }, [])
+
+  const handleNext = (e) => {
+    e.preventDefault();
+    set_demographic({
+      sex,
+      dob,
+      yrsinsch,
+      edulevel,
+      ethnic,
+      maricalsrtatus,
+      workstatus,
+      household_age,
+      avg_earning_rate,
+      avg_earning,
+      house_hold_income,
+    });
     setstep(2);
   };
 
+
+
   const saveAndContinue = () => {
-    console.log(sex, dob, house_hold_income, avg_earning, avg_earning_rate);
-  }
+    setLoadingText("Saving & Exiting... Please wait...");
+    // setLoading(true);
+    console.log({
+      sex,
+      dob,
+      yrsinsch,
+      edulevel,
+      ethnic,
+      maricalsrtatus,
+      workstatus,
+      household_age,
+      avg_earning_rate,
+      avg_earning,
+      house_hold_income,
+    });
+
+    // console.log(sex, dob, house_hold_income, avg_earning, avg_earning_rate);
+  };
 
   const handleSexChange = (e) => setSex(e.target.value);
   const handleDOBChange = (e) => setDob(e.target.value);
@@ -35,11 +80,17 @@ export default function DemographicInfo({ setstep }) {
   const handleEarning = (e) => setEarning(e.target.value);
   const handleHouseIncome = (e) => setHouseHolincome(e.target.value);
 
-  
-  
   return (
     <div>
-      <form onSubmit={handleNext}>
+      <form onSubmit={handleNext} >
+        <div className="row">
+          <div className="col-md-12">
+            <strong style={{ textTransform: "uppercase" }}>
+              Demographic Information
+            </strong>
+          </div>
+        </div>
+
         <div className="row">
           <div className="col-md-12">
             <div className="row">
@@ -53,6 +104,7 @@ export default function DemographicInfo({ setstep }) {
                     id="sex"
                     onChange={handleSexChange}
                     required
+                    defaultValue={demographic.sex}
                     className="form-control"
                   >
                     <option value="">Select Gender</option>
@@ -70,6 +122,7 @@ export default function DemographicInfo({ setstep }) {
                     <strong>2.</strong> Date Of Birth
                   </label>
                   <input
+                    // value={demographic.dob}
                     type="date"
                     required
                     onChange={handleDOBChange}
@@ -97,6 +150,7 @@ export default function DemographicInfo({ setstep }) {
                     Kindergaten?
                   </label>
                   <input
+                    // value={demographic.yrsinsch}
                     required
                     type="number"
                     onChange={handleYrsInSchChange}
@@ -117,6 +171,7 @@ export default function DemographicInfo({ setstep }) {
                     name="edulevel"
                     required
                     id="edulevel"
+                    defaultValue={demographic.edulevel}
                     onChange={handleHighestEduLevel}
                     className="form-control"
                   >
@@ -166,6 +221,7 @@ export default function DemographicInfo({ setstep }) {
                     onChange={handleEthicGroup}
                     name="ethnicgroup"
                     required
+                    defaultValue={ethnic}
                     id="ethnicgroup"
                     className="form-control"
                   >
@@ -193,6 +249,7 @@ export default function DemographicInfo({ setstep }) {
                     name="ethnicgroup"
                     id="ethnicgroup"
                     required
+                    defaultValue={maricalsrtatus}
                     className="form-control"
                   >
                     <option value="">Select an option</option>
@@ -223,6 +280,7 @@ export default function DemographicInfo({ setstep }) {
                     your main work status over the past 12 months?
                   </label>
                   <select
+                  defaultValue={demographic.workstatus}
                     onChange={handleWorkStatus}
                     name="emp_status"
                     required
@@ -263,6 +321,7 @@ export default function DemographicInfo({ setstep }) {
                   <input
                     onChange={handleHouseHoldAge}
                     required
+                    // value={demographic.household_age}
                     type="number"
                     className="form-control"
                     id="hse_count"
@@ -288,6 +347,7 @@ export default function DemographicInfo({ setstep }) {
                   </label>
                   <select
                     required
+                    defaultValue={demographic.avg_earning_rate}
                     onChange={handleEarningRate}
                     name="emp_status"
                     id="emp_status"
@@ -312,6 +372,7 @@ export default function DemographicInfo({ setstep }) {
                   <input
                     onChange={handleEarning}
                     required
+                    // value={demographic.avg_earning}
                     type="number"
                     className="form-control"
                     id="avg_earning"
@@ -338,6 +399,7 @@ export default function DemographicInfo({ setstep }) {
                   <select
                     required
                     name="emp_status"
+                    defaultValue={demographic.house_hold_income}
                     onChange={handleHouseIncome}
                     id="emp_status"
                     className="form-control"
@@ -373,7 +435,7 @@ export default function DemographicInfo({ setstep }) {
         <div className="row">
           <div className="col-md-3">
             <button
-              type='button'
+              type="button"
               onClick={() => saveAndContinue()}
               className="btn btn-warning btn-block"
               style={{ cursor: "pointer", color: "white" }}
@@ -383,6 +445,7 @@ export default function DemographicInfo({ setstep }) {
           </div>
           <div className="col-md-3">
             <button
+
               type="submit"
               className="btn btn-info btn-block"
               style={{ cursor: "pointer", color: "white" }}
@@ -393,6 +456,14 @@ export default function DemographicInfo({ setstep }) {
         </div>
         <br />
       </form>
+
+      <LoadingModal
+        show={loading}
+        text={loadingText}
+        handleClose={() => {
+          setLoading(false);
+        }}
+      ></LoadingModal>
     </div>
   );
 }

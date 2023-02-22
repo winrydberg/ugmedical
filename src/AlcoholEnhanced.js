@@ -1,49 +1,54 @@
-import React, {useState} from "react";
+import React, {useState, useEffect} from "react";
 
-export default function AlcoholEnhanced({ setstep }) {
+export default function AlcoholEnhanced({ setstep, set_alcohol_exp, setreachstep }) {
+  const [con_home_brewed, setConsHomeBrewed] = useState("");
+  const [home_brewed_spirit, setHomeBrewedSpirit] = useState("");
+  const [home_brewed_beer, setHomeBrewedBeer] = useState("");
+  const [border_alcohol, setBorderAlcohol] = useState("");
+  const [alcohol_not_drinking, setAlcoholNotForDrinking] = useState("");
+  const [untaxed, setUntaxedAlc] = useState("");
+  const [stop_drink_once_started, setStopDrinkOnceStarted] = useState("");
+  const [do_what_expected, setDoWhatsExpected] = useState("");
+  const [first_drink_moorning, setFirstDrinkMorning] = useState("");
+  const [family_problems, setFamilyProblems] = useState("");
 
-    
-    const [con_home_brewed, setConsHomeBrewed] = useState("");
-    const [home_brewed_spirit, setHomeBrewedSpirit] = useState("");
-    const [home_brewed_beer, setHomeBrewedBeer] = useState("");
-    const [border_alcohol, setBorderAlcohol] = useState("");
-    const [alcohol_not_drinking, setAlcoholNotForDrinking] = useState("");
-    const [untaxed, setUntaxedAlc] = useState("");
-    const [stop_drink_once_started, setStopDrinkOnceStarted] = useState("");
-    const [do_what_expected, setDoWhatsExpected] = useState("");
-    const [first_drink_moorning, setFirstDrinkMorning] = useState("");
-    const [family_problems, setFamilyProblems] = useState("");
+  const handleHomeBrewed = (e) => setConsHomeBrewed(e.target.value);
+  const handleHomeBrewedSpirit = (e) => setHomeBrewedSpirit(e.target.value);
+  const handleHomeBrewedBeer = (e) => setHomeBrewedBeer(e.target.value);
+  const handleBorderAlcohol = (e) => setBorderAlcohol(e.target.value);
+  const handleAlcoholNotForDrinking = (e) =>
+    setAlcoholNotForDrinking(e.target.value);
+  const handleUntaxedAlcohol = (e) => setUntaxedAlc(e.target.value);
+  const handleStopOnceStarted = (e) => setStopDrinkOnceStarted(e.target.value);
+  const handleDoWhatsExpected = (e) => setDoWhatsExpected(e.target.value);
+  const handleFirstDrinkMorning = (e) => setFirstDrinkMorning(e.target.value);
+  const handleFanilyProblems = (e) => setFamilyProblems(e.target.value);
 
+  useEffect(() => {
+    setreachstep(4);
+  }, []);
 
+  const handleNext = (e) => {
+    e.preventDefault();
+    set_alcohol_exp({
+      con_home_brewed,
+      home_brewed_spirit,
+      home_brewed_beer,
+      border_alcohol,
+      alcohol_not_drinking,
+      untaxed,
+      stop_drink_once_started,
+      do_what_expected,
+      first_drink_moorning,
+      family_problems,
+    });
+    setstep(5);
+  };
 
-      const handleHomeBrewed = (e) => setConsHomeBrewed(e.target.value); 
-      const handleHomeBrewedSpirit = (e) => setHomeBrewedSpirit(e.target.value); 
-      const handleHomeBrewedBeer = (e) => setHomeBrewedBeer(e.target.value); 
-      const handleBorderAlcohol = (e) => setBorderAlcohol(e.target.value); 
-      const handleAlcoholNotForDrinking = (e) =>
-        setAlcoholNotForDrinking(e.target.value); 
-      const handleUntaxedAlcohol = (e) => setUntaxedAlc(e.target.value);
-      const handleStopOnceStarted = (e) =>
-        setStopDrinkOnceStarted(e.target.value);
-      const handleDoWhatsExpected = (e) => setDoWhatsExpected(e.target.value); 
-      const handleFirstDrinkMorning = (e) => setFirstDrinkMorning(e.target.value); 
-      const handleFanilyProblems = (e) => setFamilyProblems(e.target.value); 
-
-         
-
-
-
-    const handleNext = () => {
-      setstep(5);
-    };
-
-    const handleBack = () => {
-      setstep(4);
-    };
-    const saveAndContinue = () => {
-    };
-
-
+  const handleBack = () => {
+    setstep(4);
+  };
+  const saveAndContinue = () => {};
 
   return (
     <div>

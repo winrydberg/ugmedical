@@ -1,7 +1,6 @@
-import React, {useState} from "react";
+import React, {useState, useEffect} from "react";
 
-export default function CardioVascular({ setstep }) {
-
+export default function CardioVascular({ setstep, set_cardiovascular, setreachstep }) {
   const [heart_attack, setHeardAttack] = useState("");
   const [curr_takes_aspirin, setCurrTakesAspirin] = useState("");
   const [curr_takes_statins, setCurrTakesStatin] = useState("");
@@ -13,66 +12,77 @@ export default function CardioVascular({ setstep }) {
     reduce_fat_intake: "",
     do_physical_excercise: "",
     body_weight: "",
-    reduce_sugar_intake: ""
+    reduce_sugar_intake: "",
   });
 
   const handleHeartAttackChange = (e) => setHeardAttack(e.target.value);
-  const handleCurrTakesAspirinChange = (e) => setCurrTakesAspirin(e.target.value);
-  const handleCurrTakesStatinsChange = (e) => setCurrTakesStatin(e.target.value);
-  const handleVisitDocPastYearChange = (e) => setVisitDocInPastYear(e.target.value);
+  const handleCurrTakesAspirinChange = (e) =>
+    setCurrTakesAspirin(e.target.value);
+  const handleCurrTakesStatinsChange = (e) =>
+    setCurrTakesStatin(e.target.value);
+  const handleVisitDocPastYearChange = (e) =>
+    setVisitDocInPastYear(e.target.value);
+
+  useEffect(() => {
+    setreachstep(10);
+  }, []);
 
   const handleAdviceDuringVisit = (val) => (e) => {
-      switch (val) {
-        case 1:
-          setDuringVisitAadvise((prevState) => ({
-            ...prevState,
-            quit_smoking: e.target.value,
-          }));
+    switch (val) {
+      case 1:
+        setDuringVisitAadvise((prevState) => ({
+          ...prevState,
+          quit_smoking: e.target.value,
+        }));
 
-          break;
-        case 2:
-          setDuringVisitAadvise((prevState) => ({
-            ...prevState,
-            reduce_salt: e.target.value,
-          }));
-          break;
-        case 3:
-          setDuringVisitAadvise((prevState) => ({
-            ...prevState,
-            eat_fruit_veges_daily: e.target.value,
-          }));
-          break;
-        case 4:
-          setDuringVisitAadvise((prevState) => ({
-            ...prevState,
-            reduce_fat_intake: e.target.value,
-          }));
-          break;
-        case 5:
-          setDuringVisitAadvise((prevState) => ({
-            ...prevState,
-            do_physical_excercise: e.target.value,
-          }));
-          break;
-        case 6:
-          setDuringVisitAadvise((prevState) => ({
-            ...prevState,
-            body_weight: e.target.value,
-          }));
-          break;
-        case 7:
-          setDuringVisitAadvise((prevState) => ({
-            ...prevState,
-            reduce_sugar_intake: e.target.value,
-          }));
-      }
-    };
+        break;
+      case 2:
+        setDuringVisitAadvise((prevState) => ({
+          ...prevState,
+          reduce_salt: e.target.value,
+        }));
+        break;
+      case 3:
+        setDuringVisitAadvise((prevState) => ({
+          ...prevState,
+          eat_fruit_veges_daily: e.target.value,
+        }));
+        break;
+      case 4:
+        setDuringVisitAadvise((prevState) => ({
+          ...prevState,
+          reduce_fat_intake: e.target.value,
+        }));
+        break;
+      case 5:
+        setDuringVisitAadvise((prevState) => ({
+          ...prevState,
+          do_physical_excercise: e.target.value,
+        }));
+        break;
+      case 6:
+        setDuringVisitAadvise((prevState) => ({
+          ...prevState,
+          body_weight: e.target.value,
+        }));
+        break;
+      case 7:
+        setDuringVisitAadvise((prevState) => ({
+          ...prevState,
+          reduce_sugar_intake: e.target.value,
+        }));
+    }
+  };
 
-
-
-
-
-  const handleNext = () => {
+  const handleNext = (e) => {
+    e.preventDefault();
+    set_cardiovascular({
+      heart_attack,
+      curr_takes_aspirin,
+      curr_takes_statins,
+      visi_doc_past_year,
+      during_visit,
+    });
     setstep(11);
   };
 
@@ -80,9 +90,7 @@ export default function CardioVascular({ setstep }) {
     setstep(9);
   };
 
-  const saveAndContinue = () => {
-
-  }
+  const saveAndContinue = () => {};
 
   return (
     <div>
@@ -90,7 +98,7 @@ export default function CardioVascular({ setstep }) {
         <div className="row">
           <div className="col-md-12">
             <strong style={{ textTransform: "uppercase" }}>
-              CORE: CORE: History of Cardiovascular Diseases
+              CORE: History of Cardiovascular Diseases
             </strong>
             <p>Questions:</p>
           </div>

@@ -1,28 +1,40 @@
-import React, {useState} from "react";
+import React, {useState, useEffect} from "react";
 
-export default function Cholesterol({ setstep }) {
+export default function Cholesterol({ setstep, set_cholesterol, setreachstep }) {
+  const [cols_measureby_doc, setColsmeasuredByDoc] = useState("");
+  const [raised_cols_level, setRaisedColsLevel] = useState("");
+  const [raised_cols_past_year, setColsRaisedPastYear] = useState("");
+  const [taken_oral_cols_med_pastweeks, setTakenColsMedPastWeeks] =
+    useState("");
+  const [seen_trad_for_cols, setSeentradForCols] = useState("");
+  const [curr_taking_herbmed_forcols, setCurrTakingHerbMedForCols] =
+    useState("");
 
-    const [cols_measureby_doc, setColsmeasuredByDoc] = useState("");
-    const [raised_cols_level, setRaisedColsLevel] = useState("");
-    const [raised_cols_past_year, setColsRaisedPastYear] = useState("");
-    const [taken_oral_cols_med_pastweeks, setTakenColsMedPastWeeks] = useState("");
-    const [seen_trad_for_cols, setSeentradForCols] = useState("");
-    const [curr_taking_herbmed_forcols, setCurrTakingHerbMedForCols] = useState("");
+  const handleBPMeasuredChange = (e) => setColsmeasuredByDoc(e.target.value);
+  const handleRaisedColsLevelChange = (e) => setRaisedColsLevel(e.target.value);
+  const handleRaisedColsPastYearChange = (e) =>
+    setColsRaisedPastYear(e.target.value);
+  const handleTakenColsMedPastWeekChange = (e) =>
+    setTakenColsMedPastWeeks(e.target.value);
+  const handleSeenTradForColsMedChange = (e) =>
+    setSeentradForCols(e.target.value);
+  const handleCurrTakingHerbmedForColsChange = (e) =>
+    setCurrTakingHerbMedForCols(e.target.value);
 
+  useEffect(() => {
+    setreachstep(9);
+  }, []);
 
-
-    const handleBPMeasuredChange = (e) => setColsmeasuredByDoc(e.target.value);
-    const handleRaisedColsLevelChange = (e) => setRaisedColsLevel(e.target.value);
-    const handleRaisedColsPastYearChange = (e) => setColsRaisedPastYear(e.target.value);
-    const handleTakenColsMedPastWeekChange = (e) => setTakenColsMedPastWeeks(e.target.value);
-    const handleSeenTradForColsMedChange = (e) => setSeentradForCols(e.target.value);
-    const handleCurrTakingHerbmedForColsChange = (e) => setCurrTakingHerbMedForCols(e.target.value);
-
-
-
-
-
-  const handleNext = () => {
+  const handleNext = (e) => {
+    e.preventDefault();
+    set_cholesterol({
+      cols_measureby_doc,
+      raised_cols_level,
+      raised_cols_past_year,
+      taken_oral_cols_med_pastweeks,
+      seen_trad_for_cols,
+      curr_taking_herbmed_forcols,
+    });
     setstep(10);
   };
 

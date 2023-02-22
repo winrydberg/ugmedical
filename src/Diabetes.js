@@ -1,25 +1,43 @@
-import React, {useState} from "react";
+import React, {useState, useEffect} from "react";
 
-export default function Diabetes({ setstep }) {
-
+export default function Diabetes({ setstep, set_diabetes, setreachstep }) {
   const [bs_measure, setBloodSugarMeasure] = useState("");
   const [bs_measure_raised, setBloodSugarRaised] = useState("");
   const [bs_raised_past_yr, setBSRaisedPastYear] = useState("");
   const [taken_bs_med_past_week, setTakenBSMedPastWeek] = useState("");
   const [curr_taken_insulin, setCurrTakingInsulin] = useState("");
   const [seen_trad_healer_for_bs, setSeenTradHealerForBS] = useState("");
-  const [curr_taking_herbal_med_for_insulin, setCurTakingHerbalDiabetes] = useState("");
+  const [curr_taking_herbal_med_for_insulin, setCurTakingHerbalDiabetes] =
+    useState("");
 
   const handleBSMeasureChange = (e) => setBloodSugarMeasure(e.target.value);
   const handleBSRaisedChange = (e) => setBloodSugarRaised(e.target.value);
-  const handleBSRaisedPastYearChange = (e) => setBSRaisedPastYear(e.target.value);
-  const handleTakenBSMedPastWeekChange = (e) => setTakenBSMedPastWeek(e.target.value);
-  const handleCurrTakingInsulinChange = (e) => setCurrTakingInsulin(e.target.value);
-  const handleSeenTradHealerChange = (e) => setSeenTradHealerForBS(e.target.value);
-  const handleCurrTakingHerbMedInsulinChange = (e) => setCurTakingHerbalDiabetes(e.target.value);
+  const handleBSRaisedPastYearChange = (e) =>
+    setBSRaisedPastYear(e.target.value);
+  const handleTakenBSMedPastWeekChange = (e) =>
+    setTakenBSMedPastWeek(e.target.value);
+  const handleCurrTakingInsulinChange = (e) =>
+    setCurrTakingInsulin(e.target.value);
+  const handleSeenTradHealerChange = (e) =>
+    setSeenTradHealerForBS(e.target.value);
+  const handleCurrTakingHerbMedInsulinChange = (e) =>
+    setCurTakingHerbalDiabetes(e.target.value);
 
+  useEffect(() => {
+    setreachstep(8);
+  }, []);
 
-  const handleNext = () => {
+  const handleNext = (e) => {
+    e.preventDefault();
+    set_diabetes({
+      bs_measure,
+      bs_measure_raised,
+      bs_raised_past_yr,
+      taken_bs_med_past_week,
+      curr_taken_insulin,
+      seen_trad_healer_for_bs,
+      curr_taking_herbal_med_for_insulin,
+    });
     setstep(9);
   };
 
@@ -27,9 +45,7 @@ export default function Diabetes({ setstep }) {
     setstep(7);
   };
 
-  const saveAndContinue = () => {
-
-  };
+  const saveAndContinue = () => {};
 
   return (
     <div>
