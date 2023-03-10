@@ -1,29 +1,34 @@
 import React, {useState, useEffect} from 'react'
+import Swal from 'sweetalert2'
+import { SurveyContext } from './App';
+import LoadingModal from './LoadingModal';
+import SubmitSurvey from './SubmitSurvey';
 
-export default function ({setstep, set_diets, setreachstep}) {
-
-        const [eat_fruits, setEatsFruits] = useState("");
-        const [fruit_servings, setFruitServings] = useState("");
-        const [eat_veges, setEatVeges] = useState("");
-        const [vegies_servings, setVegesServings] = useState("");
-        const [salty_sause, setSaltySause] = useState("");
-        const [salty_sause_inhouse, setSaltySauseInHouse] = useState("");
-        const [processed_foods_high_in_salt, setProcessedFoodsHighInSause] = useState("");
-        const [salty_sause_consume, setSaltySauseConsumed] = useState("");
-        const [lower_salt_importance, setImportanceLoweringSalt] = useState("");
-        const [idea_on_excess_salt, setIdeaOnExcessSalt] = useState("");
+export default function Diets({setstep, set_diets, setreachstep}) {
+        const value = React.useContext(SurveyContext);
+        const diet = value.diets;
+        const [loading, setLoading] = useState(false);
+        const [loadingText, setLoadingText] = useState("Loading... Please wait...");
+        const [eat_fruits, setEatsFruits] = useState(diet != null ? diet.eat_fruits : "");
+        const [fruit_servings, setFruitServings] = useState(diet != null ? diet.fruit_servings : "");
+        const [eat_veges, setEatVeges] = useState(diet != null ? diet.eat_veges : "");
+        const [vegies_servings, setVegesServings] = useState(diet != null ? diet.vegies_servings : "");
+        const [salty_sause, setSaltySause] = useState(diet != null ? diet.salty_sause : "");
+        const [salty_sause_inhouse, setSaltySauseInHouse] = useState(diet != null ? diet.salty_sause_inhouse : "");
+        const [processed_foods_high_in_salt, setProcessedFoodsHighInSause] = useState(diet != null ? diet.processed_foods_high_in_salt : "");
+        const [salty_sause_consume, setSaltySauseConsumed] = useState(diet != null ? diet.salty_sause_consume : "");
+        const [lower_salt_importance, setImportanceLoweringSalt] = useState(diet != null ? diet.lower_salt_importance : "");
+        const [idea_on_excess_salt, setIdeaOnExcessSalt] = useState(diet != null ? diet.idea_on_excess_salt : "");
         
         const [lowering_salt_actions, setLoweringSaltAction] = useState({
-            limit_processed_foods: "",
-            check_salt_content_of_labels: "",
-            buy_low_salt_foods: "",
-            use_spice_inplace_salt: "",
-            avoid_outide_food: "",
-            do_other_things: "",
-            specify_others: ""
-        });
-
-      
+            limit_processed_foods: diet != null ? diet.lowering_salt_actions.limit_processed_foods : "",
+            check_salt_content_of_labels: diet != null ? diet.lowering_salt_actions.check_salt_content_of_labels : "",
+            buy_low_salt_foods: diet != null ? diet.lowering_salt_actions.buy_low_salt_foods : "",
+            use_spice_inplace_salt: diet != null ? diet.lowering_salt_actions.use_spice_inplace_salt : "",
+            avoid_outide_food: diet != null ? diet.lowering_salt_actions.avoid_outide_food : "",
+            do_other_things: diet != null ? diet.lowering_salt_actions.do_other_things : "",
+            specify_others: diet != null ? diet.lowering_salt_actions.specify_others : ""
+        });      
 
         const handleEatFruitsChange = (e) => setEatsFruits(e.target.value);
         const handleFruitsServingChange = (e) =>setFruitServings(e.target.value);
@@ -75,6 +80,7 @@ export default function ({setstep, set_diets, setreachstep}) {
                   ...prevState,
                   do_other_things: e.target.value,
                 }));
+                break;
                case 7:
                 setLoweringSaltAction((prevState) => ({
                   ...prevState,
@@ -84,11 +90,29 @@ export default function ({setstep, set_diets, setreachstep}) {
         };
 
 
+        /**
+         * 
+         */
         useEffect(() => {
+            setGlobalState();
             setreachstep(5);
         }, []);
 
 
+        /**
+         * 
+         */
+        const setGlobalState = () => {
+          set_diets({
+            eat_fruits,fruit_servings,eat_veges,vegies_servings,salty_sause,salty_sause_inhouse,processed_foods_high_in_salt,salty_sause_consume,lower_salt_importance,idea_on_excess_salt,lowering_salt_actions,
+          });
+        }
+
+
+        /**
+         * 
+         * @param {*} e 
+         */
       const handleNext = (e) => {
         e.preventDefault();
         set_diets({
@@ -107,8 +131,38 @@ export default function ({setstep, set_diets, setreachstep}) {
         setstep(6);
       };
 
+      /**
+       * 
+       */
       const handleBack = () => {
         setstep(4);
+      };
+
+
+      /**
+       * 
+       */
+      const saveAndContinue = () => {
+        setLoadingText("Saving & Exiting... Please wait...");
+        setLoading(true);
+        value.completed = 0;
+        value.stage = 5;
+        setTimeout(function(){
+          SubmitSurvey(value).then(res => {
+            setLoading(false);
+            if(res.data.status == 'success'){
+              console.log('returned Data' ,res.data.data);
+              Swal.fire("Success", 'Data successully saved. Remember to come back and complete it.', 'success');
+            }else{
+              Swal.fire("Error", 'Oops, somehting went wrong. Please try again later.', 'error');
+            }
+            
+          }).catch(error => {
+            console.log(error);
+            Swal.fire("Error", 'NETWORK ERROR: Oops, somehting went wrong. Please try again later.', 'error');
+            setLoading(false);
+          })
+        }, 3000)
       };
 
   return (
@@ -118,16 +172,21 @@ export default function ({setstep, set_diets, setreachstep}) {
           <div className="col-md-12">
             <strong style={{ textTransform: "uppercase" }}>CORE: Diets</strong>
             <p>
-              The next questions ask about the fruits and vegetables that you
-              usually eat. I have a nutrition card here that shows you some
-              examples of local fruits and vegetables. Each picture represents
-              the size of a serving. As you answer these questions please think
-              of a typical week in the last year.
+              <i className='fa fa-info-circle '></i> The next questions ask about the fruits and vegetables that you
+              usually eat.  
             </p>
+            <p><i className='fa fa-info-circle '></i> I have a nutrition card here that shows you some
+              examples of local fruits and vegetables. Each picture represents
+              the size of a serving.</p>
+            <p><i className='fa fa-info-circle'></i> As you answer these questions please think
+              of a typical week in the last year.</p>
           </div>
         </div>
 
         <br />
+        <div className='col-md-12' >
+          <img src={require('./diet.jpeg')} style={{width: '100%', }}/>
+        </div>
 
         <div className="row">
           <div className="col-md-12">
@@ -141,6 +200,7 @@ export default function ({setstep, set_diets, setreachstep}) {
                   </label>
                   <input
                     required
+                    value={eat_fruits}
                     onChange={handleEatFruitsChange}
                     type="number"
                     className="form-control"
@@ -160,6 +220,7 @@ export default function ({setstep, set_diets, setreachstep}) {
                   </label>
                   <input
                     required
+                    value={fruit_servings}
                     onChange={handleFruitsServingChange}
                     type="number"
                     className="form-control"
@@ -187,6 +248,7 @@ export default function ({setstep, set_diets, setreachstep}) {
                   </label>
                   <input
                     required
+                    value={eat_veges}
                     onChange={handleEatVegesChange}
                     type="number"
                     className="form-control"
@@ -206,6 +268,7 @@ export default function ({setstep, set_diets, setreachstep}) {
                   </label>
                   <input
                     required
+                    value={vegies_servings}
                     onChange={handleVegesServingsChange}
                     type="number"
                     className="form-control"
@@ -224,18 +287,22 @@ export default function ({setstep, set_diets, setreachstep}) {
         <div className="row">
           <div className="col-md-12">
             <strong style={{ textTransform: "uppercase" }}>Dietary salt</strong>
+            <br />
             <p style={{ textAlign: "justify" }}>
-              With the next questions, we would like to learn more about salt in
+              <i className='fa fa-info-circle'></i> With the next questions, we would like to learn more about salt in
               your diet. Dietary salt includes ordinary table salt, unrefined
               salt such as sea salt, iodized salt, salty stock cubes and
               powders, and salty sauces such as soy sauce or fish sauce (see
-              showcard). The following questions are on adding salt to the food
+              showcard below). 
+            </p>
+
+            <p><i className='fa fa-info-circle'></i> The following questions are on adding salt to the food
               right before you eat it, on how food is prepared in your home, on
               eating processed foods that are high in salt such as [insert
               country specific examples], and questions on controlling your salt
-              intake. Please answer the questions even if you consider yourself
-              to eat a diet low in salt.
-            </p>
+              intake. </p>
+            <p><i className='fa fa-info-circle'></i> Please answer the questions even if you consider yourself
+              to eat a diet low in salt.</p>
           </div>
         </div>
 
@@ -244,7 +311,7 @@ export default function ({setstep, set_diets, setreachstep}) {
         <div className="row">
           <div className="col-md-12">
             <div className="row">
-              <div className="col-md-6">
+              <div className="col-md-12">
                 <div className="form-group">
                   <label htmlFor="choice">
                     <strong>5.</strong> How often do you add salt or a salty
@@ -252,12 +319,12 @@ export default function ({setstep, set_diets, setreachstep}) {
                     or as you are eating it?
                   </label>
                   <select
-                    defaultValue={""}
+                    defaultValue={salty_sause}
                     required
                     className="form-control"
                     onChange={handleSaltSauseChange}
                   >
-                    <option value="">--Select an option--</option>
+                    <option value="" disabled>--Select an option--</option>
                     <option value="Always">Always</option>
                     <option value="Often">Often</option>
                     <option value="Sometimes">Sometimes </option>
@@ -268,7 +335,7 @@ export default function ({setstep, set_diets, setreachstep}) {
                   {/* <span style="color:red;font-style:italic"></span> */}
                 </div>
               </div>
-              <div className="col-md-6">
+              <div className="col-md-12">
                 <div className="form-group">
                   <label htmlFor="choice">
                     <strong>6.</strong> How often is salt, salty seasoning or a
@@ -276,12 +343,12 @@ export default function ({setstep, set_diets, setreachstep}) {
                     household?
                   </label>
                   <select
-                    defaultValue={""}
+                    defaultValue={salty_sause_inhouse}
                     required
                     onChange={handleSaltySauseInHomeChange}
                     className="form-control"
                   >
-                    <option value="">--Select an option--</option>
+                    <option value="" disabled>--Select an option--</option>
                     <option value="Always">Always</option>
                     <option value="Often">Often</option>
                     <option value="Sometimes">Sometimes </option>
@@ -315,10 +382,10 @@ export default function ({setstep, set_diets, setreachstep}) {
                   <select
                     onChange={handleProcessedFoodHighInSauseChange}
                     required
-                    defaultValue={""}
+                    defaultValue={processed_foods_high_in_salt}
                     className="form-control"
                   >
-                    <option value="">--Select an option--</option>
+                    <option value="" disabled>--Select an option--</option>
                     <option value="Always">Always</option>
                     <option value="Often">Often</option>
                     <option value="Sometimes">Sometimes </option>
@@ -338,19 +405,19 @@ export default function ({setstep, set_diets, setreachstep}) {
         <div className="row">
           <div className="col-md-12">
             <div className="row">
-              <div className="col-md-6">
+              <div className="col-md-12">
                 <div className="form-group">
                   <label htmlFor="choice">
                     <strong>8.</strong> How much salt or salty sauce do you
                     think you consume?
                   </label>
                   <select
-                    defaultValue={""}
+                    defaultValue={salty_sause_consume}
                     required
                     onChange={handleSaltySauseConsumeChange}
                     className="form-control"
                   >
-                    <option value="">--Select an option--</option>
+                    <option value="" disabled>--Select an option--</option>
                     <option value="Far too much">Far too much</option>
                     <option value="Too much">Too much</option>
                     <option value="Just the right amount">
@@ -363,7 +430,10 @@ export default function ({setstep, set_diets, setreachstep}) {
                   {/* <span style="color:red;font-style:italic"></span> */}
                 </div>
               </div>
-              <div className="col-md-6">
+
+              <br />
+
+              <div className="col-md-12">
                 <div className="form-group">
                   <label htmlFor="choice">
                     <strong>9.</strong> How important to you is lowering the
@@ -371,11 +441,11 @@ export default function ({setstep, set_diets, setreachstep}) {
                   </label>
                   <select
                     onChange={handleImprtanceLowerSaltChange}
-                    defaultValue={""}
+                    defaultValue={lower_salt_importance}
                     required
                     className="form-control"
                   >
-                    <option value="">--Select an option--</option>
+                    <option value=""disabled>--Select an option--</option>
                     <option value="Very important">Very important</option>
                     <option value="Somewhat important">
                       Somewhat important
@@ -397,7 +467,7 @@ export default function ({setstep, set_diets, setreachstep}) {
         <div className="row">
           <div className="col-md-12">
             <div className="row">
-              <div className="col-md-6">
+              <div className="col-md-12">
                 <div className="form-group">
                   <label htmlFor="choice">
                     <strong>10.</strong> Do you think that too much salt or
@@ -405,11 +475,11 @@ export default function ({setstep, set_diets, setreachstep}) {
                   </label>
                   <select
                     onChange={handleIdeaOnExcessSaltChange}
-                    defaultValue={""}
+                    defaultValue={idea_on_excess_salt}
                     required
                     className="form-control"
                   >
-                    <option value="">--Select an option--</option>
+                    <option value="" disabled>--Select an option--</option>
                     <option value="Yes">Yes</option>
                     <option value="No">No</option>
                     <option value="Don't know">Don't know</option>
@@ -441,11 +511,11 @@ export default function ({setstep, set_diets, setreachstep}) {
                     <strong>(I)</strong> Limit consumption of processed foods
                   </label>
                   <select
-                    defaultValue={""}
+                    defaultValue={lowering_salt_actions.limit_processed_foods}
                     onChange={(e) => handleSaltLoweringActions(e,1)}
                     className="form-control"
                   >
-                    <option value="">--Select an option--</option>
+                    <option value="" disabled>--Select an option--</option>
                     <option value="Yes">Yes</option>
                     <option value="No">No</option>
                   </select>
@@ -459,11 +529,11 @@ export default function ({setstep, set_diets, setreachstep}) {
                     food labels
                   </label>
                   <select
-                    defaultValue={""}
+                    defaultValue={lowering_salt_actions.check_salt_content_of_labels}
                     onChange={(e) => handleSaltLoweringActions(e,2)}
                     className="form-control"
                   >
-                    <option value="">--Select an option--</option>
+                    <option value="" disabled>--Select an option--</option>
                     <option value="Yes">Yes</option>
                     <option value="No">No</option>
                   </select>
@@ -476,11 +546,11 @@ export default function ({setstep, set_diets, setreachstep}) {
                     <strong>(III)</strong> Buy low salt/sodium alternatives
                   </label>
                   <select
-                    defaultValue={""}
+                    defaultValue={lowering_salt_actions.buy_low_salt_foods}
                     onChange={(e) => handleSaltLoweringActions(e,3)}
                     className="form-control"
                   >
-                    <option value="">--Select an option--</option>
+                    <option value="" disabled>--Select an option--</option>
                     <option value="Yes">Yes</option>
                     <option value="No">No</option>
                   </select>
@@ -495,11 +565,11 @@ export default function ({setstep, set_diets, setreachstep}) {
                   </label>
                   <select
                     onChange={(e) => handleSaltLoweringActions(e,4)}
-                    defaultValue={""}
+                    defaultValue={lowering_salt_actions.use_spice_inplace_salt}
                     required
                     className="form-control"
                   >
-                    <option value="">--Select an option--</option>
+                    <option value="" disabled>--Select an option--</option>
                     <option value="Yes">Yes</option>
                     <option value="No">No</option>
                   </select>
@@ -513,11 +583,11 @@ export default function ({setstep, set_diets, setreachstep}) {
                     a home
                   </label>
                   <select
-                    defaultValue={""}
+                    defaultValue={lowering_salt_actions.avoid_outide_food}
                     className="form-control"
                     onChange={(e) => handleSaltLoweringActions(e,5)}
                   >
-                    <option value="">--Select an option--</option>
+                    <option value="" disabled>--Select an option--</option>
                     <option value="Yes">Yes</option>
                     <option value="No">No</option>
                   </select>
@@ -532,11 +602,11 @@ export default function ({setstep, set_diets, setreachstep}) {
                     control your salt intake
                   </label>
                   <select
-                    defaultValue={""}
+                    defaultValue={lowering_salt_actions.do_other_things}
                     className="form-control"
                     onChange={(e) => handleSaltLoweringActions(e,6)}
                   >
-                    <option value="">--Select an option--</option>
+                    <option value="" disabled>--Select an option--</option>
                     <option value="Yes">Yes</option>
                     <option value="No">No</option>
                   </select>
@@ -546,11 +616,12 @@ export default function ({setstep, set_diets, setreachstep}) {
               <div className="col-md-4">
                 <div className="form-group">
                   <label htmlFor="choice">
-                    <strong>(IV)</strong> Other (Please sppecify)
+                    <strong>(IV)</strong> Others (Please specify)
                   </label>
                   <input
+                    value={lowering_salt_actions.specify_others}
                     className="form-control"
-                    onChange={(e) => handleSaltLoweringActions(e,7)}
+                    onChange={(e)=>handleSaltLoweringActions(e,7)}
                   />
                   {/* <span style="color:red;font-style:italic"></span> */}
                 </div>
@@ -564,6 +635,8 @@ export default function ({setstep, set_diets, setreachstep}) {
         <div className="row">
           <div className="col-md-2">
             <button
+              type='button'
+              onClick={handleBack}
               className="btn btn-danger btn-block"
               style={{ cursor: "pointer", color: "white" }}
             >
@@ -572,6 +645,8 @@ export default function ({setstep, set_diets, setreachstep}) {
           </div>
           <div className="col-md-3">
             <button
+              type='button'
+              onClick={saveAndContinue}
               className="btn btn-warning btn-block"
               style={{ cursor: "pointer", color: "white" }}
             >
@@ -589,6 +664,14 @@ export default function ({setstep, set_diets, setreachstep}) {
           </div>
         </div>
       </form>
+
+      <LoadingModal
+        show={loading}
+        text={loadingText}
+        handleClose={() => {
+          setLoading(false);
+        }}
+      ></LoadingModal>
     </div>
   );
 }

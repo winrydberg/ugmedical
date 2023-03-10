@@ -23,7 +23,11 @@
     <link rel="stylesheet" href="%PUBLIC_URL%/ug/bower_components/Ionicons/css/ionicons.min.css">
     <link rel="stylesheet" href="%PUBLIC_URL%/ug/dist/css/AdminLTE.min.css">
     <link rel="stylesheet" href="%PUBLIC_URL%/ug/dist/css/skins/_all-skins.min.css">
-    
+    <link rel="stylesheet" href="https://sts.ug.edu.gh/services/assets/css/vendors.css">
+    <link rel="stylesheet" href="https://sts.ug.edu.gh/services/assets/css/app.css">
+    <link rel="stylesheet" href="https://sts.ug.edu.gh/services/assets/css/core/menu/menu-types/horizontal-menu.css">
+    <link rel="stylesheet" href="https://sts.ug.edu.gh/services/assets/css/core/menu/menu-types/horizontal-menu.css">
+    <script defer src="https://cdn.jsdelivr.net/npm/html-duration-picker@latest/dist/html-duration-picker.min.js"></script>
     <link href="https://fonts.googleapis.com/css?family=Montserrat:300,300i,400,400i,500,500i%7COpen+Sans:300,300i,400,400i,600,600i,700,700i" rel="stylesheet">
 
     <!--
@@ -38,37 +42,34 @@
     <title>React App</title>
 
     <style type="text/css">
-            .ugbackcolor{
-                background: #000073!important
-            }
-            .box {
-                border-top: none;
-                border: 1px solid #d6d6d6;
-                background: rgba(255,255,255,0.6);
-            }
-            form .form-section {
-                color: #404E67;
-                line-height: 3rem;
-                margin-bottom: 20px;
-                border-bottom: 1px solid #404E67;
-            }
-            .box-header {
-                border-bottom: 1px solid #d6d6d6;
-                border-left: 1px solid #d6d6d6;
-                background: #f9f6f1;
-                background: -moz-linear-gradient(top, #f9f6f1 0%, #f2efea 100%);
-                background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#f9f6f1), color-stop(100%,#f2efea));
-                background: -webkit-linear-gradient(top, #f9f6f1 0%,#f2efea 100%);
-                background: -o-linear-gradient(top, #f9f6f1 0%,#f2efea 100%);
-                background: -ms-linear-gradient(top, #f9f6f1 0%,#f2efea 100%);
-                background: linear-gradient(top, #f9f6f1 0%,#f2efea 100%);
-                filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#f9f6f1', endColorstr='#f2efea');
-                -ms-filter: "progid:DXImageTransform.Microsoft.gradient(startColorstr='#f9f6f1', endColorstr='#f2efea')";
-            }
-            h1, h2, h3, h4, h5, h6, .h1, .h2, .h3, .h4, .h5, .h6 {
-                font-family: 'Montserrat','Source Sans Pro',sans-serif;
-            }
-        </style>
+      .badge,.sty{
+          text-transform: uppercase;
+          font-style: italic;
+      }
+      .headers{
+          color:#281564;
+          font-weight: bold;
+      }
+      .card{
+     border: 1px solid #d6d6d6;
+  }
+  .card-header{
+    background: #f9f6f1;
+    background:-moz-linear-gradient(top, #f9f6f1 0%, #f2efea 100%); /* FF3.6+ */
+    background:-webkit-gradient(linear, left top, left bottom, color-stop(0%,#f9f6f1), color-stop(100%,#f2efea)); /* Chrome,Safari4+ */
+    background:-webkit-linear-gradient(top, #f9f6f1 0%,#f2efea 100%); /* Chrome10+,Safari5.1+ */
+    background:-o-linear-gradient(top, #f9f6f1 0%,#f2efea 100%); /* Opera11.10+ */
+    background:-ms-linear-gradient(top, #f9f6f1 0%,#f2efea 100%); /* IE10+ */
+    background:linear-gradient(top, #f9f6f1 0%,#f2efea 100%); /* W3C */
+    filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#f9f6f1', endColorstr='#f2efea');
+    -ms-filter: "progid:DXImageTransform.Microsoft.gradient(startColorstr='#f9f6f1', endColorstr='#f2efea')";  
+    -webkit-background-clip: padding-box;
+    padding:1.0rem 1.5rem;
+    border-bottom: 1px solid #d6d6d6;
+  }
+  </style>
+
+  
   </head>
   <body>
     <noscript>You need to enable JavaScript to run this app.</noscript>

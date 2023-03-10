@@ -1,39 +1,43 @@
 import React, {useState, useEffect} from "react";
+import Swal from 'sweetalert2'
+import { SurveyContext } from "./App";
+import LoadingModal from "./LoadingModal";
+import SubmitSurvey from "./SubmitSurvey";
 
 export default function Cholesterol({ setstep, set_cholesterol, setreachstep }) {
-  const [cols_measureby_doc, setColsmeasuredByDoc] = useState("");
-  const [raised_cols_level, setRaisedColsLevel] = useState("");
-  const [raised_cols_past_year, setColsRaisedPastYear] = useState("");
-  const [taken_oral_cols_med_pastweeks, setTakenColsMedPastWeeks] =
-    useState("");
-  const [seen_trad_for_cols, setSeentradForCols] = useState("");
-  const [curr_taking_herbmed_forcols, setCurrTakingHerbMedForCols] =
-    useState("");
+  const value = React.useContext(SurveyContext);
+  const coles = value.cholestrol;
+  const [loading, setLoading] = useState(false);
+  const [loadingText, setLoadingText] = useState("Loading... Please wait...");
+  const [cols_measureby_doc, setColsmeasuredByDoc] = useState(coles != null ? coles.cols_measureby_doc : "");
+  const [raised_cols_level, setRaisedColsLevel] = useState(coles != null ? coles.raised_cols_level : "");
+  const [raised_cols_past_year, setColsRaisedPastYear] = useState(coles != null ? coles.raised_cols_past_year : "");
+  const [taken_oral_cols_med_pastweeks, setTakenColsMedPastWeeks] = useState(coles != null ? coles.taken_oral_cols_med_pastweeks: "");
+  const [seen_trad_for_cols, setSeentradForCols] = useState(coles != null ? coles.seen_trad_for_cols : "");
+  const [curr_taking_herbmed_forcols, setCurrTakingHerbMedForCols] = useState(coles != null ? coles.curr_taking_herbmed_forcols : "");
 
   const handleBPMeasuredChange = (e) => setColsmeasuredByDoc(e.target.value);
   const handleRaisedColsLevelChange = (e) => setRaisedColsLevel(e.target.value);
-  const handleRaisedColsPastYearChange = (e) =>
-    setColsRaisedPastYear(e.target.value);
-  const handleTakenColsMedPastWeekChange = (e) =>
-    setTakenColsMedPastWeeks(e.target.value);
-  const handleSeenTradForColsMedChange = (e) =>
-    setSeentradForCols(e.target.value);
-  const handleCurrTakingHerbmedForColsChange = (e) =>
-    setCurrTakingHerbMedForCols(e.target.value);
+  const handleRaisedColsPastYearChange = (e) => setColsRaisedPastYear(e.target.value);
+  const handleTakenColsMedPastWeekChange = (e) => setTakenColsMedPastWeeks(e.target.value);
+  const handleSeenTradForColsMedChange = (e) => setSeentradForCols(e.target.value);
+  const handleCurrTakingHerbmedForColsChange = (e) => setCurrTakingHerbMedForCols(e.target.value);
 
   useEffect(() => {
+    setGlobalState();
     setreachstep(9);
-  }, []);
+  }, [cols_measureby_doc,raised_cols_level,raised_cols_past_year,taken_oral_cols_med_pastweeks,seen_trad_for_cols,curr_taking_herbmed_forcols,]);
+
+  const setGlobalState = () => {
+    set_cholesterol({
+      cols_measureby_doc,raised_cols_level,raised_cols_past_year,taken_oral_cols_med_pastweeks,seen_trad_for_cols,curr_taking_herbmed_forcols,
+    });
+  }
 
   const handleNext = (e) => {
     e.preventDefault();
     set_cholesterol({
-      cols_measureby_doc,
-      raised_cols_level,
-      raised_cols_past_year,
-      taken_oral_cols_med_pastweeks,
-      seen_trad_for_cols,
-      curr_taking_herbmed_forcols,
+      cols_measureby_doc,raised_cols_level,raised_cols_past_year,taken_oral_cols_med_pastweeks,seen_trad_for_cols,curr_taking_herbmed_forcols,
     });
     setstep(10);
   };
@@ -42,7 +46,31 @@ export default function Cholesterol({ setstep, set_cholesterol, setreachstep }) 
     setstep(8);
   };
 
-  const saveAndContinue = () => {};
+  /**
+   * 
+   */
+  const saveAndContinue = () => {
+      setLoadingText("Saving & Exiting... Please wait...");
+      setLoading(true);
+      value.completed = 0;
+      value.stage = 9;
+      setTimeout(function(){
+        SubmitSurvey(value).then(res => {
+          setLoading(false);
+          if(res.data.status == 'success'){
+            console.log('returned Data' ,res.data.data);
+            Swal.fire("Success", 'Data successully saved. Remember to come back and complete it.', 'success');
+          }else{
+            Swal.fire("Error", 'Oops, somehting went wrong. Please try again later.', 'error');
+          }
+          
+        }).catch(error => {
+          console.log(error);
+          Swal.fire("Error", 'NETWORK ERROR: Oops, somehting went wrong. Please try again later.', 'error');
+          setLoading(false);
+        })
+      }, 3000)
+    };
 
   return (
     <div>
@@ -70,7 +98,7 @@ export default function Cholesterol({ setstep, set_cholesterol, setreachstep }) 
                   </label>
                   <select
                     onChange={handleBPMeasuredChange}
-                    defaultValue={""}
+                    defaultValue={cols_measureby_doc}
                     required
                     className="form-control"
                   >
@@ -92,7 +120,7 @@ export default function Cholesterol({ setstep, set_cholesterol, setreachstep }) 
                   </label>
                   <select
                     onChange={handleRaisedColsLevelChange}
-                    defaultValue={""}
+                    defaultValue={raised_cols_level}
                     required
                     className="form-control"
                   >
@@ -122,7 +150,7 @@ export default function Cholesterol({ setstep, set_cholesterol, setreachstep }) 
                   </label>
                   <select
                     onChange={handleRaisedColsPastYearChange}
-                    defaultValue={""}
+                    defaultValue={raised_cols_past_year}
                     required
                     className="form-control"
                   >
@@ -145,7 +173,7 @@ export default function Cholesterol({ setstep, set_cholesterol, setreachstep }) 
                   </label>
                   <select
                     onChange={handleTakenColsMedPastWeekChange}
-                    defaultValue={""}
+                    defaultValue={taken_oral_cols_med_pastweeks}
                     required
                     className="form-control"
                   >
@@ -175,7 +203,7 @@ export default function Cholesterol({ setstep, set_cholesterol, setreachstep }) 
                   </label>
                   <select
                     onChange={handleSeenTradForColsMedChange}
-                    defaultValue={""}
+                    defaultValue={seen_trad_for_cols}
                     required
                     className="form-control"
                   >
@@ -197,7 +225,7 @@ export default function Cholesterol({ setstep, set_cholesterol, setreachstep }) 
                   </label>
                   <select
                     onChange={handleCurrTakingHerbmedForColsChange}
-                    defaultValue={""}
+                    defaultValue={curr_taking_herbmed_forcols }
                     required
                     className="form-control"
                   >
@@ -248,6 +276,14 @@ export default function Cholesterol({ setstep, set_cholesterol, setreachstep }) 
           </div>
         </div>
       </form>
+
+      <LoadingModal
+        show={loading}
+        text={loadingText}
+        handleClose={() => {
+          setLoading(false);
+        }}
+      ></LoadingModal>
     </div>
   );
 }

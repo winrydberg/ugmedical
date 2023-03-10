@@ -1,0 +1,1 @@
+export const baseURL = "https://sts.ug.edu.gh/services/medical/save";

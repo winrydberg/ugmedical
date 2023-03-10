@@ -1,237 +1,141 @@
 import React, {useState, useEffect} from "react";
+import Swal from 'sweetalert2'
 import axios from 'axios';
 import LoadingModal from "./LoadingModal";
 import { SurveyContext } from "./App";
+import SubmitSurvey from "./SubmitSurvey";
 
-const baseURL = "https://sts.ug.edu.gh/services/medical/save";
+const baseURL = "#";
 
-export default function GenderScreening({ setstep, set_gendescreen, setreachstep }) {
+export default function GenderScreening({ setstep, set_gendescreen, setreachstep, set_completed_info }) {
   const data = React.useContext(SurveyContext);
+  const gendersc = data.gender_screen;
+
   const [loading, setLoading] = useState(false);
   const [loadingText, setLoadingText] = useState("Loading... Please wait...");
 
   //page data
-  const [cervical_cancer_screening, setCervicalCancer] = useState("");
-  const [breast_cancer_screening, setBreastCancer] = useState("");
-  const [breast_cancer_screen_date, setBreastCancerScreenDate] = useState("");
-  const [breast_cancer_result, setBreastCancerScreenResult] = useState("");
+  const [cervical_cancer_screening, setCervicalCancer] = useState(gendersc != null ? gendersc.cervical_cancer_screening : "");
+  const [breast_cancer_screening, setBreastCancer] = useState(gendersc != null ? gendersc.breast_cancer_screening : "");
+  const [breast_cancer_screen_date, setBreastCancerScreenDate] = useState(gendersc != null ? gendersc.breast_cancer_screen_date : "");
+  const [breast_cancer_result, setBreastCancerScreenResult] = useState(gendersc != null ? gendersc.breast_cancer_result : "");
 
-  const [prostrate_cancer_screen, setProstrateCancer] = useState("");
-  const [prostrate_cancer_screen_date, setProstrateCancerScreenDate] =
-    useState("");
-  const [prostrate_cancer_screen_result, setProstrateCancerScreenResult] =
-    useState("");
+  const [prostrate_cancer_screen, setProstrateCancer] = useState(gendersc != null ? gendersc.prostrate_cancer_screen : "");
+  const [prostrate_cancer_screen_date, setProstrateCancerScreenDate] = useState(gendersc != null ? gendersc.prostrate_cancer_screen_date : "");
+  const [prostrate_cancer_screen_result, setProstrateCancerScreenResult] = useState(gendersc != null ? gendersc.prostrate_cancer_screen_result : "");
 
-  const [yellow_fever_card, setYellowFeverCard] = useState("");
-  const [heptitis_fever_card, setHeptitisCard] = useState("");
-  const [convid_fever_card, setCovidCard] = useState("");
+  const [yellow_fever_card, setYellowFeverCard] = useState(gendersc != null ? gendersc.yellow_fever_card : "");
+  const [heptitis_fever_card, setHeptitisCard] = useState(gendersc != null ? gendersc.heptitis_fever_card : "");
+  const [convid_fever_card, setCovidCard] = useState(gendersc != null ? gendersc.convid_fever_card : "");
 
-  const handleCerivicCancerScreenStateChange = (e) =>
-    setCervicalCancer(e.target.value);
-  const handleBreastCancerScreenStateChange = (e) =>
-    setBreastCancer(e.target.value);
-  const handleBreastCancerScreenDateChange = (e) =>
-    setBreastCancerScreenDate(e.target.value);
-  const handleBreastCancerScreenResultChange = (e) =>
-    setBreastCancerScreenResult(e.target.value);
+  const handleCerivicCancerScreenStateChange = (e) => setCervicalCancer(e.target.value);
+  const handleBreastCancerScreenStateChange = (e) => setBreastCancer(e.target.value);
+  const handleBreastCancerScreenDateChange = (e) => setBreastCancerScreenDate(e.target.value);
+  const handleBreastCancerScreenResultChange = (e) => setBreastCancerScreenResult(e.target.value);
 
-  const handleProstrateCancerScreenStateChange = (e) =>
-    setProstrateCancer(e.target.value);
-  const handleProstrateCancerScreenDateChange = (e) =>
-    setProstrateCancerScreenDate(e.target.value);
-  const handleProstrateCancerScreenResultChange = (e) =>
-    setProstrateCancerScreenResult(e.target.value);
+  const handleProstrateCancerScreenStateChange = (e) => setProstrateCancer(e.target.value);
+  const handleProstrateCancerScreenDateChange = (e) => setProstrateCancerScreenDate(e.target.value);
+  const handleProstrateCancerScreenResultChange = (e) => setProstrateCancerScreenResult(e.target.value);
 
   const handleYellowFeverCardChange = (e) => setYellowFeverCard(e.target.value);
   const handleHeptitisCardChange = (e) => setHeptitisCard(e.target.value);
   const handleCovidCardChange = (e) => setCovidCard(e.target.value);
 
   useEffect(() => {
+    setFinalData();
     setreachstep(11);
-  }, []);
+  }, [cervical_cancer_screening, 
+      breast_cancer_screening, 
+      breast_cancer_screen_date, 
+      breast_cancer_result,
+      prostrate_cancer_screen,
+      prostrate_cancer_screen_date,
+      prostrate_cancer_screen_result,
+      yellow_fever_card,
+      heptitis_fever_card,
+      convid_fever_card]);
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-
+  const setFinalData = () => {
     set_gendescreen({
       cervical_cancer_screening,
       breast_cancer_screening,
       breast_cancer_screen_date,
       breast_cancer_result,
+      prostrate_cancer_screen,
       prostrate_cancer_screen_date,
       prostrate_cancer_screen_result,
       yellow_fever_card,
       heptitis_fever_card,
       convid_fever_card,
     });
+  }
 
-    setLoading(true);
-
+  const handleSubmit =  (e) => {
+    e.preventDefault();
+    data.completed = 1;
+    data.stage = 12;
     console.log(data);
-    axios.post(baseURL, {
-      id: "",
-      sid: data.user.student_id,
-      type: data.user.offering_type,
-      hall: data.user.hall,
-      address: "N/A",
-      dateOfCompletion: new Date(),
-      consent: data.consent,
-      interviewLang: "English",
-      interviewTime: new Date().toTimeString().split(' ')[0],
-      familySurname: data.user.student_name.split(",")[0],
-      firstName: data.user.student_name.split(",")[1],
-      mobileNumber: data.phoneno,
-      //DEMOGRAPHICS
-      gender: data.demographic.sex,
-      dateOfBirth: data.demographic.dob,
-      schoolYears: data.demographic.yrsinsch,
-      highestEduLevel: data.demographic.edulevel,
-      tribe: data.demographic.ethnic,
-      maritalStatus: data.demographic.maricalsrtatus,
-      occupation: data.demographic.workstatus,
-      PeopleInHousehold: data.demographic.household_age,
-      householdEarnings:
-        data.demographic.avg_earning + " " + data.demographic.avg_earning_rate,
-      householdIncomeEstimate: data.demographic.house_hold_income,
-      //TOBACCO
-      useTobaccoProduct: data.tobacco?.tb_status,
-      useTobaccoProductDaily: data.tobacco?.tb_daily_use,
-      ageStartedSmoking: data.tobacco?.age_tb_use,
-      smokingHowLong: data.tobacco?.useduration,
-      averageSmokingProductStats: data.tobacco?.useduration_val,
-      triedStopSmoking: data.tobacco?.try_stop,
-      advisedQuitSmoking: data.tobacco?.advice_by_doc,
-      smokeTobaccoInPast: data.tobacco?.past_use,
-      smokeTobaccoInPastDaily: data.tobacco?.past_use_daily,
-      ageStoppedSmoking: data.tobacco?.age_of_stop,
-      stopSmokingHowLong: data.tobacco?.duration_of_stop,
-      useSmokelessProduct: data.tobacco?.currently_using,
-      useSmokelessProductDaily: data.tobacco?.currently_using_smokeless,
-      averageSmokelessProductUsage: {
-        mouth: data.tobacco?.snuff_by_mouth,
-        node: data.tobacco?.snuff_by_node,
-        chewing: data.tobacco?.snuff_by_chewing,
-        betel: data.tobacco?.snuff_by_betel_quid,
-      },
-      useSmokelessProductInPast: data.tobacco?.past_use_status,
-      useSmokelessProductInPastDaily: data.tobacco?.past_use_status_daily,
-      someoneSmokeHome: data.tobacco?.smoke_in_home,
-      someoneSmokeWorkplace: data.tobacco?.smoke_in_work,
-
-      //ALCOHOL
-      useAlcohol: data.alcohol?.dring_alcohol,
-      useAlcoholPastMonth: data.alcohol?.dring_alcohol_past_year,
-      stoppedDrinking: data.alcohol?.stop_drinking_health,
-      alcoholUsageFrequency: data.alcohol?.past_year_freq,
-      consumeAlcoholPast: data.alcohol?.past_month_intake,
-      alcoholOccasions: data.alcohol?.drink_occasion,
-      alcoholOccasionsStandard: data.alcohol?.standard_drink_in_occasion,
-      alcoholOccasionsStandardLargest: data.alcohol?.largest_drink,
-      alcoholOccasionsStandardSix: data.alcohol?.six_more_drink,
-      alcoholOccasionsStandardEachDay: data.alcohol?.week_standard_drink,
-
-    //   EXPANDED ALCOHOL
-      consumeAcoholHomebrewed: "",
-      consumeAcoholHomebrewedStats: "",
-      pastAlcoholStopDrinking: "",
-      pastAlcoholFailedExpected: "",
-      pastAlcoholFirstDrink: "",
-      pastAlcoholFamilyProblems: "",
-
-      eatFruitDays: data.diets?.eat_fruits,
-      eatFruitServings: data.diets?.fruit_servings,
-      eatVegetablesDays: data.diets?.eat_veges,
-      eatVegetablesServings: data.diets?.vegies_servings,
-      addSaltWhenEating: data.diets?.salty_sause,
-      addSaltWhenPreparing: data.diets?.salty_sause_inhouse,
-      eatProcessedFood: data.diets?.processed_foods_high_in_salt,
-      saltysauceConsume: data.diets?.salty_sause_consume,
-      saltLoweringImportance: data.diets?.lower_salt_importance,
-      thinkSaltCauseHealthProblem: data.diets?.idea_on_excess_salt,
-      limitProcessedFoodConsumption: data.diets?.lowering_salt_actions.limit_processed_foods,
-      lookAtSaltContent: data.diets?.lowering_salt_actions.check_salt_content_of_labels,
-      buySaltAlternatives: data.diets?.lowering_salt_actions.buy_low_salt_foods,
-      useSpiceWhenCooking: data.diets?.lowering_salt_actions.use_spice_inplace_salt,
-      avoidPreparedFoodOutside: data.diets?.lowering_salt_actions.avoid_outide_food,
-      thingsControlSaltIntake: data.diets?.lowering_salt_actions.do_other_things,
-      //   specifyOthersThing: data.diets.lowering_salt_actions.specify_others, //not included
-      workInvolvesActivityVigorous: data.physical_excercise?.work_involves_activity,
-      activityVigorousDays: data.physical_excercise?.days_of_vigorous_ex,
-      activityVigorousTime: data.physical_excercise?.mod_excerise_in_week,
-      workInvolvesActivityModerate: data.physical_excercise?.work_inv_moderate_excercise,
-      activityModerateDays: data.physical_excercise?.work_mod_intencity_excercise,
-      activityModerateTime: data.physical_excercise?.time_spent_excerise,
-      walkOrUseBicycle: data.physical_excercise?.pedal_cycling,
-      walkOrUseBicycleDays: data.physical_excercise?.days_spent_pedal_cycling,
-      walkOrUseBicycleTime: data.physical_excercise?.time_spent_cycling,
-      doVigorousSports: data.physical_excercise?.vig_sports,
-      doVigorousSportsDays: data.physical_excercise?.weekly_vig_sports,
-      doVigorousSportsTime: data.physical_excercise?.timespent_vig_sports,
-      doModerateSports: data.physical_excercise?.vig_sports_increasing_bresdth,
-      doModerateSportsDays: data.physical_excercise?.days_spent_invig_sports,
-      doModerateSportsTime: data.physical_excercise?.time_spent_vigsport_daily,
-      doSittingTime: data.physical_excercise?.time_spent_sitting, //**missing inmy form. to be done by my */
-
-      bloodPressureMeasured: data.bloodpressure?.measure_blood_pressure,
-      bloodPressureMeasuredTold: data.bloodpressure?.raised_bllod_pressure,
-      bloodPressureMeasuredToldPast: data.bloodpressure?.bp_raised_in_past_year,
-      bloodPressureMedicationTaken: data.bloodpressure?.taken_bp_drug_in_past_weeks,
-      bloodPressureTraditional: data.bloodpressure?.contacted_nativedoc_on_bp,
-      bloodPressureTakingHerbal: data.bloodpressure?.currently_taking_herbal_med_bp,
-
-      bloodSugarMeasured: data.diabetes?.bs_measure,
-      bloodSugarMeasuredTold: data.diabetes?.bs_measure_raised,
-      bloodSugarMeasuredToldPast: data.diabetes?.bs_raised_past_yr,
-      bloodSugarMeasuredTakenDrugs: data.diabetes?.taken_bs_med_past_week,
-      bloodSugarMeasuredInsulin: data.diabetes?.curr_taken_insulin,
-      bloodSugarMeasuredTraditional: data.diabetes?.seen_trad_healer_for_bs,
-      bloodSugarTakingHerbal: data.diabetes?.curr_taking_herbal_med_for_insulin,
-
-      cholesterolMeasured: data.cholestrol?.cols_measureby_doc,
-      cholesterolMeasuredTold: data.cholestrol?.raised_cols_level,
-      cholesterolMeasuredToldPast: data.cholestrol?.raised_cols_past_year,
-      cholesterolMeasuredMedication: data.cholestrol?.taken_oral_cols_med_pastweeks,
-      cholesterolMeasuredTradtional: data.cholestrol?.seen_trad_for_cols,
-      cholesterolMeasuredHerbal: data.cholestrol?.curr_taking_herbmed_forcols,
-      cholesterolMeasuredTakingHerbal: data.cholestrol?.curr_taking_herbmed_forcols,
-
-      hadHeartAttack: data.cardiovascular?.heart_attack,
-      takingAspirin: data.cardiovascular?.curr_takes_aspirin,
-      takingStatins: data.cardiovascular?.curr_takes_statins,
-      visitedDoctor: data.cardiovascular?.visi_doc_past_year,
-      advisedQuitTobacco: data.cardiovascular?.during_visit.quit_smoking,
-      advisedSaltIntake: data.cardiovascular?.during_visit.reduce_salt,
-      advisedTakingFruits: data.cardiovascular?.during_visit.eat_fruit_veges_daily,
-      advisedFatIntake: data.cardiovascular?.during_visit.reduce_fat_intake,
-      advisedExercise: data.cardiovascular?.during_visit.do_physical_excercise,
-      advisedLoseWeight: data.cardiovascular?.during_visit.body_weight,
-      advisedReduceSugar: data.cardiovascular?.during_visit.reduce_sugar_intake,
-    },{
-        headers: {
-            'Content-Type': 'application/x-www-form-urlencoded'
-        }
-    }).then(res => {
-        if(res.data.status =='success'){
-            setstep(12)
-        }else{
-            localStorage.setItem('survey', JSON.stringify(data))
-            alert('Unable to save survey reports')
-        }
+    setLoading(true);
+    setTimeout(function(){
+      SubmitSurvey(data).then(res => {
         setLoading(false);
-    }).catch(error => {
-        localStorage.setItem('survey', JSON.stringify(data))
-        alert('NETWORK ERROR: Unable to save survey reports')
-    });
-  };
+        if(res.data.status == 'success'){
+          console.log('returned Data' ,res.data.data);
+          set_completed_info(res.data.info);
+          setstep(12);
+          Swal.fire("Success", 'Survey successfully completed. Thank you for taking part in this important excercise!', 'success').then(() => {
+            window.location.reload();
+          });
+        }else{
+          Swal.fire("Error", 'Oops, somehting went wrong. Please try again later.', 'error');
+        }
+        
+      }).catch(error => {
+        console.log(error);
+        Swal.fire("Error", 'NETWORK ERROR: Oops, somehting went wrong. Please try again later.', 'error');
+        setLoading(false);
+      })
+
+    }, 3000)
+    
+};
 
   const handleBack = () => {
     setstep(1);
   };
 
-  const saveAndContinue = () => {
-    axios.post("/url", {});
+   /**
+   * 
+   */
+   const saveAndContinue = () => {
+    setLoadingText("Saving & Exiting... Please wait...");
+    setLoading(true);
+    data.completed = 0;
+    data.stage = 11;
+    setTimeout(function(){
+      SubmitSurvey(data).then(res => {
+        
+        setLoading(false);
+        if(res.data.status == 'success'){
+          console.log('returned Data' ,res.data.data);
+          Swal.fire("Success", 'Data successully saved. Remember to come back and complete it.', 'success');
+        }else{
+          Swal.fire("Error", 'Oops, somehting went wrong. Please try again later.', 'error');
+        }
+        
+      }).catch(error => {
+        console.log(error);
+        Swal.fire("Error", 'NETWORK ERROR: Oops, somehting went wrong. Please try again later.', 'error');
+        setLoading(false);
+      })
+    }, 3000)
   };
 
+  /**
+   * 
+   * @returns 
+   * 
+   */
   const renderBreastCancer = () => {
     if (breast_cancer_screening == "Yes") {
       return (
@@ -242,6 +146,7 @@ export default function GenderScreening({ setstep, set_gendescreen, setreachstep
                 <strong>(II).</strong> Date of last screening
               </label>
               <input
+                value={breast_cancer_screen_date}
                 onChange={handleBreastCancerScreenDateChange}
                 type="date"
                 className="form-control"
@@ -257,7 +162,7 @@ export default function GenderScreening({ setstep, set_gendescreen, setreachstep
               </label>
               <select
                 onChange={handleBreastCancerScreenResultChange}
-                defaultValue={""}
+                defaultValue={breast_cancer_result}
                 className="form-control"
               >
                 <option value="" disabled>
@@ -274,6 +179,12 @@ export default function GenderScreening({ setstep, set_gendescreen, setreachstep
     }
   };
 
+
+  /**
+   * 
+   * @returns 
+   * 
+   */
   const renderProstrateCancer = () => {
     if (prostrate_cancer_screen == "Yes") {
       return (
@@ -286,6 +197,7 @@ export default function GenderScreening({ setstep, set_gendescreen, setreachstep
               <input
                 onChange={handleProstrateCancerScreenDateChange}
                 type="date"
+                value={prostrate_cancer_screen_date}
                 className="form-control"
                 name="prostrate_cancer_date"
               />
@@ -299,7 +211,7 @@ export default function GenderScreening({ setstep, set_gendescreen, setreachstep
               </label>
               <select
                 onChange={handleProstrateCancerScreenResultChange}
-                defaultValue={""}
+                defaultValue={prostrate_cancer_screen_result}
                 className="form-control"
               >
                 <option value="" disabled>
@@ -316,9 +228,10 @@ export default function GenderScreening({ setstep, set_gendescreen, setreachstep
     }
   };
 
-  return (
-    <div>
-      <form onSubmit={handleSubmit} method="POST">
+
+  const renderFemaleHeading = () => {
+    if(data.user?.gender === "F"){
+      return (
         <div className="row">
           <div className="col-md-12">
             <strong style={{ textTransform: "uppercase" }}>
@@ -340,68 +253,80 @@ export default function GenderScreening({ setstep, set_gendescreen, setreachstep
             </p>
           </div>
         </div>
+      )
+    }
+  }
 
-        <br />
 
+  const renderFemaleQuestions = () => {
+    if(data.user?.gender === "F"){
+      return (
         <div className="row">
-          <div className="col-md-12">
-            <div className="row">
-              <div className="col-md-12">
-                <div className="form-group">
-                  <label htmlFor="choice">
-                    <strong>1.</strong> Have you ever had a screening test for
-                    cervical cancer, using any of these methods described above?
-                  </label>
-                  <select
-                    onChange={handleCerivicCancerScreenStateChange}
-                    defaultValue={""}
-                    className="form-control"
-                  >
-                    <option value="" disabled>
-                      --Select an option--
-                    </option>
-                    <option value="Yes">Yes</option>
-                    <option value="No">No</option>
-                  </select>
-                  {/* <span style="color:red;font-style:italic"></span> */}
-                </div>
+        <div className="col-md-12">
+          <div className="row">
+            <div className="col-md-12">
+              <div className="form-group">
+                <label htmlFor="choice">
+                  <strong>1.</strong> Have you ever had a screening test for
+                  cervical cancer, using any of these methods described above?
+                </label>
+                <select
+                  onChange={handleCerivicCancerScreenStateChange}
+                  defaultValue={cervical_cancer_screening}
+                  className="form-control"
+                >
+                  <option value="" disabled>
+                    --Select an option--
+                  </option>
+                  <option value="Yes">Yes</option>
+                  <option value="No">No</option>
+                </select>
+                {/* <span style="color:red;font-style:italic"></span> */}
               </div>
-
-              <div className="col-md-12">
-                <strong>2. BREAST CANCER SCREENING</strong>
-              </div>
-              <br />
-              <br />
-
-              <div className="col-md-5">
-                <div className="form-group">
-                  <label htmlFor="choice">
-                    <strong>(I).</strong> Have you ever had Breast Cancer
-                    Screening? Yes / No
-                  </label>
-                  <select
-                    onChange={handleBreastCancerScreenStateChange}
-                    defaultValue={""}
-                    className="form-control"
-                  >
-                    <option value="" disabled>
-                      --Select an option--
-                    </option>
-                    <option value="Yes">Yes</option>
-                    <option value="No">No</option>
-                  </select>
-                  {/* <span style="color:red;font-style:italic"></span> */}
-                </div>
-              </div>
-
-              {renderBreastCancer()}
             </div>
+
+            <div className="col-md-12">
+              <strong>2. BREAST CANCER SCREENING</strong>
+            </div>
+            <br />
+            <br />
+
+            <div className="col-md-5">
+              <div className="form-group">
+                <label htmlFor="choice">
+                  <strong>(I).</strong> Have you ever had Breast Cancer
+                  Screening? Yes / No
+                </label>
+                <select
+                  onChange={handleBreastCancerScreenStateChange}
+                  defaultValue={breast_cancer_screening}
+                  className="form-control"
+                >
+                  <option value="" disabled>
+                    --Select an option--
+                  </option>
+                  <option value="Yes">Yes</option>
+                  <option value="No">No</option>
+                </select>
+                {/* <span style="color:red;font-style:italic"></span> */}
+              </div>
+            </div>
+
+            {renderBreastCancer()}
           </div>
         </div>
+      </div>
 
-        <br />
+      )
+    }
+  }
 
-        <div className="row">
+
+  const renderMaleQuestions = () => {
+    if(data.user?.gender === "M"){
+      return (
+        <>
+              <div className="row">
           <div className="col-md-12">
             <strong style={{ textTransform: "uppercase" }}>
               3. CORE (for men only): PROSTATE CANCER SCREENING
@@ -421,7 +346,7 @@ export default function GenderScreening({ setstep, set_gendescreen, setreachstep
                   </label>
                   <select
                     onChange={handleProstrateCancerScreenStateChange}
-                    defaultValue={""}
+                    defaultValue={prostrate_cancer_screen}
                     className="form-control"
                   >
                     <option value="" disabled>
@@ -438,6 +363,29 @@ export default function GenderScreening({ setstep, set_gendescreen, setreachstep
             </div>
           </div>
         </div>
+        </>
+      )
+    }
+  }
+
+  /**
+   * 
+   * 
+   * 
+   */
+  return (
+    <div>
+      <form onSubmit={handleSubmit} method="POST">
+        
+        {renderFemaleHeading()}
+
+        <br />
+
+        {renderFemaleQuestions()}
+       
+        <br />
+
+        {renderMaleQuestions()}
 
         <br />
 
@@ -446,6 +394,7 @@ export default function GenderScreening({ setstep, set_gendescreen, setreachstep
             <strong style={{ textTransform: "uppercase" }}>
               VACCINATION CARD
             </strong>
+            <p>Have you been vaccinated against the following illments? </p>
           </div>
         </div>
 
@@ -457,12 +406,17 @@ export default function GenderScreening({ setstep, set_gendescreen, setreachstep
                   <label htmlFor="choice">
                     <strong>4.</strong> Yellow Fever
                   </label>
-                  <input
-                    onChange={handleYellowFeverCardChange}
-                    type="text"
+                   <select
+                     onChange={handleYellowFeverCardChange}
+                    defaultValue={yellow_fever_card}
                     className="form-control"
-                    name="prostrate_cancer_date"
-                  />
+                  >
+                    <option value="" disabled>
+                      --Select an option--
+                    </option>
+                    <option value="Yes">Yes</option>
+                    <option value="No">No</option>
+                  </select>
                   {/* <span style="color:red;font-style:italic"></span> */}
                 </div>
               </div>
@@ -472,12 +426,17 @@ export default function GenderScreening({ setstep, set_gendescreen, setreachstep
                   <label htmlFor="choice">
                     <strong>5.</strong> Hepatitis B
                   </label>
-                  <input
-                    onChange={handleHeptitisCardChange}
-                    type="text"
+                  <select
+                     onChange={handleHeptitisCardChange}
+                    defaultValue={heptitis_fever_card}
                     className="form-control"
-                    name="prostrate_cancer_date"
-                  />
+                  >
+                    <option value="" disabled>
+                      --Select an option--
+                    </option>
+                    <option value="Yes">Yes</option>
+                    <option value="No">No</option>
+                  </select>
                   {/* <span style="color:red;font-style:italic"></span> */}
                 </div>
               </div>
@@ -486,12 +445,17 @@ export default function GenderScreening({ setstep, set_gendescreen, setreachstep
                   <label htmlFor="choice">
                     <strong>6.</strong> Covid 19
                   </label>
-                  <input
-                    onChange={handleCovidCardChange}
-                    type="text"
+                  <select
+                     onChange={handleCovidCardChange}
+                    defaultValue={convid_fever_card}
                     className="form-control"
-                    name="prostrate_cancer_date"
-                  />
+                  >
+                    <option value="" disabled>
+                      --Select an option--
+                    </option>
+                    <option value="Yes">Yes</option>
+                    <option value="No">No</option>
+                  </select>
                   {/* <span style="color:red;font-style:italic"></span> */}
                 </div>
               </div>
@@ -534,13 +498,13 @@ export default function GenderScreening({ setstep, set_gendescreen, setreachstep
         </div>
       </form>
 
-      {/* <LoadingModal
+      <LoadingModal
         show={loading}
         text={loadingText}
         handleClose={() => {
           setLoading(false);
         }}
-      ></LoadingModal> */}
+      ></LoadingModal>
     </div>
   );
 }

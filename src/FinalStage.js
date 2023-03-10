@@ -8,7 +8,18 @@ import {
   PDFViewer,
 } from "@react-pdf/renderer";
 import DemographicPDF from './PDF/DemographicPDF';
+import jsPDF from 'jspdf';
+
 import { SurveyContext } from './App';
+import ResponsePDF from './ResponsePDF';
+import TobaccoPDF from './PDF/TobaccoPDF';
+import AlcoholConsPDF from './PDF/AlcoholConsPDF';
+import DietPDF from './PDF/DietPDF';
+import PhysicalPDF from './PDF/PhysicalPDF';
+import BloodPressurePDF from './PDF/BloodPressurePDF';
+import CholesterolPDF from './PDF/CholesterolPDF';
+import CardiovascularPDF from './PDF/CardiovascularPDF';
+import GenderScreenPDF from './PDF/GenderScreenPDF';
 
 const styles = StyleSheet.create({
   docStyle: {
@@ -32,7 +43,7 @@ const styles = StyleSheet.create({
 
 export default function FinalStage() {
   const value = React.useContext(SurveyContext); 
-  console.log(value);
+
   return (
     <div>
       <div className="row" style={{ minHeight: "100vh" }}>
@@ -48,9 +59,8 @@ export default function FinalStage() {
         >
           <div
             style={{
-              height: 100,
-              width: 100,
               borderRadius: 50,
+              padding: 20,
               backgroundColor: "#2da44e",
               display: "flex",
               alignItems: "center",
@@ -60,36 +70,32 @@ export default function FinalStage() {
           >
             <i className="fa fa-check fa-3x" style={{ color: "white" }}></i>
           </div>
+          <h3><strong>COMPLETED !!!</strong></h3>
           <p>
-            <strong>END:</strong> Thank you for completing the survey. You can
-            go ahead and download your responses in PDF.
+             Thank you for completing the students medical survey.
           </p>
 
           <div className="col-md-12 container">
+            {/* <ResponsePDF data={value}/> */}
+
             <PDFViewer style={styles.docStyle}>
-              <Document style={{ width: "100%" }}>
-                <DemographicPDF user={value.user} data={value.demographic} />
-                <Page size="A4" style={styles.page}>
-                  <View style={styles.section}>
-                    <Text>Section #1</Text>
-                  </View>
-                  <View style={styles.section}>
-                    <Text>Section #2</Text>
-                  </View>
-                </Page>
+              <Document>
+                  <DemographicPDF data={value.complete_data} phoneno={value.phoneno} />
+                  <TobaccoPDF data={value.complete_data}/>
+                  <AlcoholConsPDF data={value.complete_data}/>
+                  <DietPDF data={value.complete_data}/>
+                  <PhysicalPDF data={value.complete_data}/>
+                  <BloodPressurePDF data={value.complete_data}/>
+                  <CholesterolPDF data={value.complete_data}/>
+                  <CardiovascularPDF data={value.complete_data}/>
+                  <GenderScreenPDF data={value.complete_data}/>
               </Document>
             </PDFViewer>
+            
           </div>
 
-          <div className="col-md-3">
-            <button
-              className="btn btn-warning btn-block"
-              style={{ cursor: "pointer", color: "white" }}
-            >
-              <i style={{ color: "white" }} className="fa fa-download"></i>{" "}
-              Download PDF
-            </button>
-          </div>
+
+          
         </div>
       </div>
     </div>

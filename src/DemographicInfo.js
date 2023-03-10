@@ -1,6 +1,11 @@
 import React, {useEffect, useState} from 'react'
+import Swal from 'sweetalert2'
+import axios from 'axios';
 import { SurveyContext } from './App';
 import LoadingModal from './LoadingModal';
+import SubmitSurvey from './SubmitSurvey';
+
+const url = "https://sts.ug.edu.gh/services/medical/getinfo";
 
 export default function DemographicInfo({
   setstep,
@@ -9,24 +14,59 @@ export default function DemographicInfo({
 }) {
   const value = React.useContext(SurveyContext);
   const demographic = value.demographic;
+  const student = value.user;
+  const phoneno = value.phoneno
   const [loading, setLoading] = useState(false);
   const [loadingText, setLoadingText] = useState("Loading... Please wait...");
-  const [sex, setSex] = useState("");
-  const [dob, setDob] = useState("");
-  const [yrsinsch, setYrsSch] = useState("");
-  const [edulevel, setEduLevel] = useState("");
-  const [ethnic, setEthnic] = useState("");
-  const [maricalsrtatus, setMaritalStatus] = useState("");
-  const [workstatus, setWorkStatus] = useState("");
-  const [household_age, setHouseHoldAge] = useState("");
-  const [avg_earning_rate, setEarningRate] = useState("");
-  const [avg_earning, setEarning] = useState("");
-  const [house_hold_income, setHouseHolincome] = useState("");
+  const [sex, setSex] = useState(demographic != null ? demographic.sex : "");
+  const [dob, setDob] = useState(demographic != null ? demographic.dob : "");
+  const [yrsinsch, setYrsSch] = useState(demographic != null ? demographic.yrsinsch : "");
+  const [edulevel, setEduLevel] = useState(demographic != null ? demographic.edulevel : "");
+  const [ethnic, setEthnic] = useState(demographic != null ? demographic.ethnic : "");
+  const [maricalsrtatus, setMaritalStatus] = useState(demographic != null ? demographic.maricalsrtatus : "");
+  const [workstatus, setWorkStatus] = useState(demographic != null ? demographic.workstatus : "");
+  const [household_age, setHouseHoldAge] = useState(demographic != null ? demographic.household_age : "");
+  const [avg_earning_rate, setEarningRate] = useState(demographic != null ? demographic.avg_earning_rate : "");
+  const [avg_earning, setEarning] = useState(demographic != null ? demographic.avg_earning : "");
+  const [house_hold_income, setHouseHolincome] = useState(demographic != null ? demographic.house_hold_income : "");
 
 
   useEffect(() => {
-    setreachstep(1)
-  }, [])
+    setGlobalState();
+    setreachstep(1);
+    setStudentInfo();
+  }, [sex,
+    dob,
+    yrsinsch,
+    edulevel,
+    ethnic,
+    maricalsrtatus,
+    workstatus,
+    household_age,
+    avg_earning_rate,
+    avg_earning,
+    house_hold_income,])
+
+  const setGlobalState = () => {
+      set_demographic({
+        sex,dob,yrsinsch,edulevel,ethnic,maricalsrtatus,workstatus,household_age,avg_earning_rate,avg_earning,house_hold_income,
+      });
+  }
+
+  const setStudentInfo = () => {
+    
+   if(student != null){
+    // alert(student.gender)
+    if(student.gender == "M"){
+      setSex("Male")
+    }else if(student.gender == "F"){
+      setSex("Female")
+    }
+    setDob(student.dob)
+   }
+  }
+
+
 
   const handleNext = (e) => {
     e.preventDefault();
@@ -42,6 +82,7 @@ export default function DemographicInfo({
       avg_earning_rate,
       avg_earning,
       house_hold_income,
+      phoneno
     });
     setstep(2);
   };
@@ -50,22 +91,27 @@ export default function DemographicInfo({
 
   const saveAndContinue = () => {
     setLoadingText("Saving & Exiting... Please wait...");
-    // setLoading(true);
-    console.log({
-      sex,
-      dob,
-      yrsinsch,
-      edulevel,
-      ethnic,
-      maricalsrtatus,
-      workstatus,
-      household_age,
-      avg_earning_rate,
-      avg_earning,
-      house_hold_income,
-    });
+    setLoading(true);
+    value.completed = 0;
+    value.stage = 1;
+    setTimeout(function(){
+      SubmitSurvey(value).then(res => {
+        setLoading(false);
+        if(res.data.status == 'success'){
+          // console.log('returned Data' ,res.data.data);
+          Swal.fire("Success", 'Data successully saved. Remember to come back and complete it.', 'success');
+        }else{
+          Swal.fire("Error", 'Oops, somehting went wrong. Please try again later.', 'error');
+          // console.log(error);
+        }
+        
+      }).catch(error => {
+        Swal.fire("Error", 'NETWORK ERROR: Oops, somehting went wrong. Please try again later.', 'error');
+        console.log(error);
+        setLoading(false);
+      })
 
-    // console.log(sex, dob, house_hold_income, avg_earning, avg_earning_rate);
+    }, 3000)
   };
 
   const handleSexChange = (e) => setSex(e.target.value);
@@ -80,6 +126,41 @@ export default function DemographicInfo({
   const handleEarning = (e) => setEarning(e.target.value);
   const handleHouseIncome = (e) => setHouseHolincome(e.target.value);
 
+
+
+  /**
+   * 
+   * 
+   */
+  const renderIncomeInputField = () => {
+    if(avg_earning_rate  !== 'Refused'){
+      return (
+        <div className="col-md-6">
+            <div className="form-group">
+                <label htmlFor="avg_earning"><strong>8.</strong> Enter Amount</label>
+                  <input
+                    onChange={handleEarning}
+                    required
+                    value={avg_earning}
+                    type="number"
+                    className="form-control"
+                    id="avg_earning"
+                    name="hse_count"
+                  />
+            </div>
+        </div>
+      )
+    }
+  }
+
+
+
+
+  /**
+   * 
+   * 
+   * 
+   */
   return (
     <div>
       <form onSubmit={handleNext} >
@@ -91,20 +172,23 @@ export default function DemographicInfo({
           </div>
         </div>
 
+        <br />
+
         <div className="row">
           <div className="col-md-12">
-            <div className="row">
+            <div className="row" style={{display:'none'}}>
               <div className="col-md-6">
                 <div className="form-group">
                   <label htmlFor="choice">
                     <strong>1.</strong> Sex
                   </label>
                   <select
+                    disabled
                     name="sex"
                     id="sex"
                     onChange={handleSexChange}
                     required
-                    defaultValue={demographic.sex}
+                    defaultValue={sex}
                     className="form-control"
                   >
                     <option value="">Select Gender</option>
@@ -122,9 +206,9 @@ export default function DemographicInfo({
                     <strong>2.</strong> Date Of Birth
                   </label>
                   <input
-                    // value={demographic.dob}
+                    value={dob}
                     type="date"
-                    required
+                    disabled
                     onChange={handleDOBChange}
                     className="form-control"
                     id="dob"
@@ -145,12 +229,12 @@ export default function DemographicInfo({
               <div className="col-md-6">
                 <div className="form-group">
                   <label htmlFor="yearsinsch">
-                    <strong>3.</strong> In total, how many years have you spent
+                    <strong>1.</strong> In total, how many years have you spent
                     at school and in full-time study (excluding pre-school)/
                     Kindergaten?
                   </label>
                   <input
-                    // value={demographic.yrsinsch}
+                    value={yrsinsch}
                     required
                     type="number"
                     onChange={handleYrsInSchChange}
@@ -164,14 +248,14 @@ export default function DemographicInfo({
               <div className="col-md-6">
                 <div className="form-group">
                   <label htmlFor="edulevel">
-                    <strong>4.</strong> What is the highest level of education
+                    <strong>2.</strong> What is the highest level of education
                     you have completed?
                   </label>
                   <select
                     name="edulevel"
                     required
                     id="edulevel"
-                    defaultValue={demographic.edulevel}
+                    defaultValue={edulevel}
                     onChange={handleHighestEduLevel}
                     className="form-control"
                   >
@@ -214,7 +298,7 @@ export default function DemographicInfo({
               <div className="col-md-6">
                 <div className="form-group">
                   <label htmlFor="edulevel">
-                    <strong>5.</strong> What is your ethnic group / racial group
+                    <strong>3.</strong> What is your ethnic group / racial group
                     / cultural subgroup background?
                   </label>
                   <select
@@ -225,7 +309,7 @@ export default function DemographicInfo({
                     id="ethnicgroup"
                     className="form-control"
                   >
-                    <option value="">Select an option</option>
+                    <option value="" disabled>Select an option</option>
                     <option value="Akan">Akan</option>
                     <option value="Ga">Ga</option>
                     <option value="Ewe">Ewe</option>
@@ -242,7 +326,7 @@ export default function DemographicInfo({
                 <div className="form-group">
                   <label htmlFor="yearsinsch">
                     {" "}
-                    <strong>6.</strong> What is your marital status?
+                    <strong>4.</strong> What is your marital status?
                   </label>
                   <select
                     onChange={handleMaritalStatus}
@@ -276,11 +360,11 @@ export default function DemographicInfo({
               <div className="col-md-6">
                 <div className="form-group">
                   <label htmlFor="edulevel">
-                    <strong>7.</strong> Which of the following best describes
+                    <strong>5.</strong> Which of the following best describes
                     your main work status over the past 12 months?
                   </label>
                   <select
-                  defaultValue={demographic.workstatus}
+                  defaultValue={workstatus}
                     onChange={handleWorkStatus}
                     name="emp_status"
                     required
@@ -315,13 +399,13 @@ export default function DemographicInfo({
               <div className="col-md-6">
                 <div className="form-group">
                   <label htmlFor="hse_count">
-                    <strong>8.</strong> How many people older than 18 years,
+                    <strong>6.</strong> How many people older than 18 years,
                     including yourself, live in your household?
                   </label>
                   <input
                     onChange={handleHouseHoldAge}
                     required
-                    // value={demographic.household_age}
+                    value={household_age}
                     type="number"
                     className="form-control"
                     id="hse_count"
@@ -342,12 +426,12 @@ export default function DemographicInfo({
               <div className="col-md-6">
                 <div className="form-group">
                   <label htmlFor="edulevel">
-                    <strong>9.</strong> Taking the past year, can you tell me
+                    <strong>7.</strong> Taking the past year, can you tell me
                     what the average earnings of the household have been?
                   </label>
                   <select
                     required
-                    defaultValue={demographic.avg_earning_rate}
+                    defaultValue={avg_earning_rate}
                     onChange={handleEarningRate}
                     name="emp_status"
                     id="emp_status"
@@ -363,24 +447,8 @@ export default function DemographicInfo({
                 </div>
               </div>
 
-              <div className="col-md-6">
-                <div className="form-group">
-                  <label htmlFor="avg_earning">
-                    {" "}
-                    <strong>10.</strong>Enter Amount
-                  </label>
-                  <input
-                    onChange={handleEarning}
-                    required
-                    // value={demographic.avg_earning}
-                    type="number"
-                    className="form-control"
-                    id="avg_earning"
-                    name="hse_count"
-                  />
-                  {/* <span style="color:red;font-style:italic"></span> */}
-                </div>
-              </div>
+              {renderIncomeInputField()}
+              
             </div>
           </div>
         </div>
@@ -393,13 +461,13 @@ export default function DemographicInfo({
               <div className="col-md-6">
                 <div className="form-group">
                   <label htmlFor="edulevel">
-                    <strong>11.</strong> Can you give an estimate of the annual
+                    <strong>9.</strong> Can you give an estimate of the annual
                     household income if I read some options to you? Is it
                   </label>
                   <select
                     required
                     name="emp_status"
-                    defaultValue={demographic.house_hold_income}
+                    defaultValue={house_hold_income}
                     onChange={handleHouseIncome}
                     id="emp_status"
                     className="form-control"
