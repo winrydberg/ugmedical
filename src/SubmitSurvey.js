@@ -1,5 +1,6 @@
 import axios from 'axios';
-const baseURL = "https://sts.ug.edu.gh/services/medical/save";
+import { save_endpoint } from './endpoints';
+const baseURL = save_endpoint;
 
 export default  async function SubmitSurvey(data) {
     

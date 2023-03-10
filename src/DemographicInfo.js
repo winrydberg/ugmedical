@@ -5,7 +5,6 @@ import { SurveyContext } from './App';
 import LoadingModal from './LoadingModal';
 import SubmitSurvey from './SubmitSurvey';
 
-const url = "https://sts.ug.edu.gh/services/medical/getinfo";
 
 export default function DemographicInfo({
   setstep,

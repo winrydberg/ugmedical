@@ -18,8 +18,9 @@ import CardioVascular from "./CardioVascular";
 import GenderScreening from "./GenderScreening";
 import FinalStage from './FinalStage';
 import Header from './Header';
+import { get_saved_survey_data, student_info_endpoint } from './endpoints';
 
-const url = "#";
+const url = get_saved_survey_data;
 
 export const SurveyContext = React.createContext();
 
@@ -310,7 +311,7 @@ function App() {
    * 
    */
   const getLoggedInStudentInfo = () => {
-      axios.get("https://sts.ug.edu.gh/services/medical/getstudentinfo").then(res => {
+      axios.get(student_info_endpoint).then(res => {
         setLoading(false);
         if(res.data.status === 'success'){
           console.log(res.data)
